@@ -1,11 +1,13 @@
 package bootstrap.liftweb
 
 import net.liftweb._
+import sitemap.Loc.TemplateBox
 import util._
 
 import common._
 import http._
 import sitemap._
+import com.fmpwizard.util.{InitPort, ArduinoBridge}
 
 
 /**
@@ -14,15 +16,13 @@ import sitemap._
  */
 class Boot {
   def boot {
-    //Conexion(host = "ciriscr.com", baseDatos = "Africa")
-    //RegisterJodaTimeConversionHelpers()
 
     // where to search snippet
     LiftRules.addToPackages("com.fmpwizard")
 
     // Build SiteMap
     val entries = List(
-      Menu.i("Index") / "index"
+      Menu.i("Door") / "index" >> TemplateBox(() => Templates( "doorcontrol" :: Nil))
     )
 
     // set the sitemap.  Note if you don't want access control for
@@ -43,6 +43,8 @@ class Boot {
 
     // set DocType to HTML5
     LiftRules.htmlProperties.default.set((r: Req) =>new Html5Properties(r.userAgent))
+
+    ArduinoBridge ! InitPort("/dev/tty.usbmodemfa131")
 
   } //boot
 
