@@ -8,14 +8,17 @@ scalaVersion := "2.9.1"
 
 seq(webSettings :_*)
 
-resolvers += "Typesafe Repository" at "http://repo.typesafe.com/typesafe/releases/"
+resolvers ++= Seq("snapshots" at "http://oss.sonatype.org/content/repositories/snapshots",
+                  "releases"  at "http://oss.sonatype.org/content/repositories/releases")
 
 libraryDependencies ++= {
-val liftVersion = "2.4"
+val liftVersion = "2.5-SNAPSHOT"
   Seq(
   "net.liftweb" %% "lift-webkit" % liftVersion % "compile",
   "org.eclipse.jetty" % "jetty-webapp" % "8.0.1.v20110908" % "container",
-  "com.h2database" % "h2" % "1.2.138"
+  "com.h2database" % "h2" % "1.2.138",
+  "org.specs2" %% "specs2" % "1.10" % "test",
+  "ch.qos.logback" % "logback-classic" % "0.9.26"
   )
 }
 
