@@ -44,6 +44,8 @@ class Boot {
     // set DocType to HTML5
     LiftRules.htmlProperties.default.set((r: Req) =>new Html5Properties(r.userAgent))
 
+    LiftRules.ajaxRetryCount = Full(0)
+
   } //boot
 
 } //Boot

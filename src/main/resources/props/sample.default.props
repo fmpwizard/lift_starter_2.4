@@ -1,0 +1,8 @@
+twitter.host=stream.twitter.com
+twitter.port=443
+twitter.path=/1/statuses/sample.json
+
+twitter.token=
+twitter.consumerKey=
+twitter.tokenSecret=
+twitter.consumerSecret=
