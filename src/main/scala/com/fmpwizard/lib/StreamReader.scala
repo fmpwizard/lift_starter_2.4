@@ -66,14 +66,14 @@ object StreamReader extends Loggable {
     .hostConnectionLimit(1)
     .buildFactory()
 
-  val request = new DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.GET, path)
-  request.setHeader("Authorization", buildHeader())
-  request.setHeader("User-Agent", "Finagle 4.0.2 - Liftweb")
-  request.setHeader("Host", hostAndPort)
-  logger.debug("Sending request:\n%s".format(request))
 
   def go {
 
+    val request = new DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.GET, path)
+    request.setHeader("Authorization", buildHeader())
+    request.setHeader("User-Agent", "Finagle 4.0.2 - Liftweb")
+    request.setHeader("Host", hostAndPort)
+    logger.debug("Sending request:\n%s".format(request))
 
     val client = clientFactory.apply()()
     val streamResponse = client(request)

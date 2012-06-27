@@ -13,7 +13,7 @@ import net.liftweb.json
 class TweetWritter extends NamedCometActorTrait{
 
   override def lowPriority: PartialFunction[Any, Unit] = {
-    case Tweet(t) => partialUpdate(PrependHtml("msg", <span>{formatTweet(t)}</span><hr></hr>))
+    case Tweet(t) => partialUpdate(PrependHtml("msg", <span>{formatTweet(t.openOr(""))}</span><hr></hr>))
     case Duration(d) => partialUpdate(SetHtml("finagletime", Text(d.toString)))
     case Finished(t) => partialUpdate(SetHtml("comettime", Text(t.toString  )))
   }
