@@ -13,6 +13,7 @@ resolvers ++= Seq("snapshots" at "http://oss.sonatype.org/content/repositories/s
                   "twitter"   at "http://maven.twttr.com"
                   )
 
+
 libraryDependencies ++= {
 val liftVersion = "2.5-SNAPSHOT"
   Seq(
@@ -25,12 +26,7 @@ val liftVersion = "2.5-SNAPSHOT"
       "com.twitter"         %% "finagle-core" % "4.0.2",
       "com.twitter"         %% "finagle-stream" % "4.0.2",
       "com.twitter"         %% "finagle-http" % "4.0.2",
-      "com.twitter"         %  "joauth" % "3.0.0",
-      "com.twitter"         %% "util" % "3.0.0" excludeAll(
-        ExclusionRule(organization = "com.sun.jdmk"),
-        ExclusionRule(organization = "com.sun.jmx"),
-        ExclusionRule(organization = "javax.jms")
-    )
+      "com.twitter"         %  "joauth" % "3.0.0"
   )
 }
 

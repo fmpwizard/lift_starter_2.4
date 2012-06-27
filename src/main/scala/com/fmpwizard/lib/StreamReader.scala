@@ -58,21 +58,22 @@ object StreamReader extends Loggable {
     oauthStr.format(creds.consumerKey, nonce, URLEncoder.encode(signed, "UTF-8"), signatureMethod, timestampSecs, creds.token, oauthVersion).trim
   }
 
+  val clientFactory: ServiceFactory[HttpRequest, StreamResponse] = ClientBuilder()
+    .codec(Stream())
+    .tls(host)
+    .hosts(hostAndPort)
+    .tcpConnectTimeout(1.second)
+    .hostConnectionLimit(1)
+    .buildFactory()
+
+  val request = new DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.GET, path)
+  request.setHeader("Authorization", buildHeader())
+  request.setHeader("User-Agent", "Finagle 4.0.2 - Liftweb")
+  request.setHeader("Host", hostAndPort)
+  logger.debug("Sending request:\n%s".format(request))
+
   def go {
 
-    val clientFactory: ServiceFactory[HttpRequest, StreamResponse] = ClientBuilder()
-      .codec(Stream())
-      .tls(host)
-      .hosts(hostAndPort)
-      .tcpConnectTimeout(1.second)
-      .hostConnectionLimit(1)
-      .buildFactory()
-
-    val request = new DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.GET, path)
-    request.setHeader("Authorization", buildHeader())
-    request.setHeader("User-Agent", "Finagle 4.0.2 - Liftweb")
-    request.setHeader("Host", hostAndPort)
-    logger.debug("Sending request:\n%s".format(request))
 
     val client = clientFactory.apply()()
     val streamResponse = client(request)
@@ -99,7 +100,7 @@ object StreamReader extends Loggable {
                 }
               }
               client.release()
-              clientFactory.close()
+              //clientFactory.close()
             }
             // We return a Future indicating when we've completed processing the message.
             Future.Done
