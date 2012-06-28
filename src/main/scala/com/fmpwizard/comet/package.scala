@@ -5,6 +5,8 @@ import net.liftweb.common.Box
 
 package object comet {
   case class Tweet(message: Box[JValue])
-  case class Duration(time: Long)
-  case class Finished(t: Long)
+  case class MeanRate(time: Double)
+  case class OneMinuteRate(time: Double)
+  case class FiveMinuteRate(time: Double)
+  case class NumOfTweets(t: Int)
 }

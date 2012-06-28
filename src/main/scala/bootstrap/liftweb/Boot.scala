@@ -6,6 +6,7 @@ import util._
 import common._
 import http._
 import sitemap._
+import com.fmpwizard.lib.StreamReader
 
 
 /**
@@ -14,8 +15,6 @@ import sitemap._
  */
 class Boot {
   def boot {
-    //Conexion(host = "ciriscr.com", baseDatos = "Africa")
-    //RegisterJodaTimeConversionHelpers()
 
     // where to search snippet
     LiftRules.addToPackages("com.fmpwizard")
@@ -45,6 +44,9 @@ class Boot {
     LiftRules.htmlProperties.default.set((r: Req) =>new Html5Properties(r.userAgent))
 
     LiftRules.ajaxRetryCount = Full(0)
+
+    StreamReader.go
+
 
   } //boot
 

@@ -14,8 +14,10 @@ class TweetWritter extends NamedCometActorTrait{
 
   override def lowPriority: PartialFunction[Any, Unit] = {
     case Tweet(t) => partialUpdate(PrependHtml("msg", <span>{formatTweet(t.openOr(""))}</span><hr></hr>))
-    case Duration(d) => partialUpdate(SetHtml("finagletime", Text(d.toString)))
-    case Finished(t) => partialUpdate(SetHtml("comettime", Text(t.toString  )))
+    case MeanRate(d) => partialUpdate(SetHtml("meanrate", Text(d.toString)))
+    case OneMinuteRate(d) => partialUpdate(SetHtml("oneminuterate", Text(d.toString)))
+    case FiveMinuteRate(d) => partialUpdate(SetHtml("fiveminuterate", Text(d.toString)))
+    case NumOfTweets(t) => partialUpdate(SetHtml("numoftweets", Text(t.toString)))
   }
 
   def render ={

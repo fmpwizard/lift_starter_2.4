@@ -6,17 +6,23 @@
 </head>
 <body class="lift:content_id=main">
 <div id="main" class="lift:surround?with=default;at=content">
-  <h2>Welcome to your project!</h2>
+  <h2>Here we have Twitter's finagle retrieving tweets from the stream sample api</h2>
+  <h3>and Lift is displaying them using Comet</h3>
+  <h4>The rate isn't any higher because of finagle (dispatch has about the same rate of tps).</h4>
   <form action="#">
     <div data-lift="lift:sample">
       <div>
-          Get Tweets: <input type="button" value="Submit" id="button"><br>
+          <!--Get Tweets using Finagle:  <input type="button" value="Submit" id="button11"><br>
+          Get Tweets using Dispatch: <input type="button" value="Submit" id="button22"><br>-->
       </div>
     </div>
   </form>
   <div data-lift="AddTweetComet">
-    It took <span id="finagletime">x</span> Milliseconds for finagle to get 1000 tweets .<br>
-    It took <span id="comettime">x</span> Milliseconds for finagle plus Lift to show those tweets.<br>
+    <span><strong>Mean Rate:</strong> <span id="meanrate">x</span> tweets/second.</span><br>
+    <span><strong>Last Minute Rate:</strong> <span id="oneminuterate">x</span> tweets/second.</span><br>
+    <span><strong>Last 5 Minutes Rate:</strong> <span id="fiveminuterate">x</span> tweets/second.</span><br>
+    <span><strong>Num. of tweets:</strong> <span id="numoftweets">x</span> since boot time.</span><br>
+      <hr>
     <div id="msg"></div>
   </div>
 </div>
