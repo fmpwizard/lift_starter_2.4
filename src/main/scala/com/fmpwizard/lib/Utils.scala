@@ -39,6 +39,9 @@ object Utils extends Loggable{
                  """.replaceAll(",\\s+", ", ")
 
 
+  /**
+   * Use coda hale's metrics library
+   */
   def updateStats(tps: Meter) = {
     if ((tps.count.toDouble / 100) % 2 == 0) {
       logger.info("Sending update at %s".format(tps.count))
@@ -52,12 +55,13 @@ object Utils extends Loggable{
           }
         }
       }
-      //clientFactory.close()
-      //client.release()
     }
   }
 
-  def buildHeader() = {
+  /**
+   * Twitter uses oAuth for the streaming end point
+   */
+  def buildHeader : String = {
     val timestampSecs = Time.now.inSeconds
     val timestampStr = timestampSecs.toString
     val nonce = util.UUID.randomUUID().toString

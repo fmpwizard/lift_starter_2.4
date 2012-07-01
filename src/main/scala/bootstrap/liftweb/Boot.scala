@@ -7,6 +7,7 @@ import common._
 import http._
 import sitemap._
 import com.fmpwizard.lib.StreamReader
+import org.joda.time.DateTime
 
 
 /**
@@ -45,10 +46,20 @@ class Boot {
 
     LiftRules.ajaxRetryCount = Full(0)
 
+    /**
+     * We access this on the comet render method
+     */
+    Stats.startedAt
+
     StreamReader.go
 
 
-  } //boot
 
+
+  } //boot
 } //Boot
+
+object Stats {
+  val startedAt = new DateTime().toString("MMM dd yyyy HH:mm z")
+}
 

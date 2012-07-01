@@ -10,29 +10,34 @@ import net.liftweb.json.JsonDSL._
 import net.liftweb.json
 import org.joda.time.DateTime
 
-
+/**
+ * Our comet actor that sends the messages to the browser.
+ * We are extending the NamedCometActorTrait trait which
+ * allows an easy way to send messages to a comet actor from outside the current
+ * session.
+ */
 class TweetWritter extends NamedCometActorTrait{
 
   override def lowPriority: PartialFunction[Any, Unit] = {
-    case Tweet(t) => partialUpdate(PrependHtml("msg", <span>{formatTweet(t.openOr(""))}</span><hr></hr>))
-    case MeanRate(d) => partialUpdate(SetHtml("meanrate", Text(d.toString)))
-    case OneMinuteRate(d) => partialUpdate(SetHtml("oneminuterate", Text(d.toString)))
-    case FiveMinuteRate(d) => partialUpdate(SetHtml("fiveminuterate", Text(d.toString)))
-    case NumOfTweets(t) => {
+    /**
+     * If you want the tweets to stay on the page, you can use PrependHtml instead of SetHtml
+     */
+    //case Tweet(t)           => partialUpdate(PrependHtml("msg", <span>{t.openOr("")}</span><hr></hr>))
+    case Tweet(t)           => partialUpdate(SetHtml("msg", <span>{t.openOr("")}</span><hr></hr>))
+    case MeanRate(d)        => partialUpdate(SetHtml("meanrate", Text(d.toString)))
+    case OneMinuteRate(d)   => partialUpdate(SetHtml("oneminuterate", Text(d.toString)))
+    case FiveMinuteRate(d)  => partialUpdate(SetHtml("fiveminuterate", Text(d.toString)))
+    case NumOfTweets(t)     => {
       partialUpdate(SetHtml("numoftweets", Text(t.toString)))
       partialUpdate(Run("""$('title').replaceWith('<title>"""+ t.toString+  """ total tweets</title>');""" ))
     }
   }
 
+  /**
+   * We add the start date and time to the page.
+   * This value does not need to be updated on every comet update.
+   */
   def render ={
-    "#boottime" #> (new DateTime()).toString("MMM dd yyyy HH:mm z")
+    "#boottime" #> bootstrap.liftweb.Stats.startedAt
   }
-
-  private def formatTweet(t: JValue): NodeSeq ={
-    t match {
-      case JNothing => Text("This tweet was deleted")
-      case x        => Text(compact(json.render(x)))
-    }
-  }
-
 }
