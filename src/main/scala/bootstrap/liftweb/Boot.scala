@@ -1,3 +1,4 @@
+/*
 package bootstrap.liftweb
 
 import net.liftweb._
@@ -6,6 +7,7 @@ import util._
 import common._
 import http._
 import sitemap._
+import com.fmpwizard.stream.{LiftServer, FinagleServer}
 
 
 /**
@@ -44,7 +46,14 @@ class Boot {
     // set DocType to HTML5
     LiftRules.htmlProperties.default.set((r: Req) =>new Html5Properties(r.userAgent))
 
+    LiftRules.statelessDispatch.append({
+      case Req("stream" :: Nil, _, GetRequest) => () => LiftServer.send
+    })
+
+    //FinagleServer.main(new Array[String](1))
+
   } //boot
 
 } //Boot
 
+*/
