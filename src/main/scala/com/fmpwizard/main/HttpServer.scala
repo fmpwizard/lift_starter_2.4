@@ -12,7 +12,7 @@ import com.twitter.util.{JavaTimer, Timer, Future}
 import com.twitter.conversions.time._
 import java.net.InetSocketAddress
 import com.twitter.finagle.builder.{Server, ServerBuilder}
-import com.twitter.finagle.stream.StreamResponse
+import com.twitter.finagle.stream.{Stream, StreamResponse}
 import com.twitter.concurrent.{Offer, Broker}
 import org.jboss.netty.buffer.ChannelBuffer
 import path./
@@ -73,24 +73,12 @@ object HttpServer {
 
 
   /**
-   * The service itself. Simply echos back "hello world"
-   */
-  class Respond extends Service[HttpRequest, HttpResponse] {
-    def apply(request: HttpRequest) = {
-      val response = new DefaultHttpResponse(HTTP_1_1, OK)
-      response.setContent(copiedBuffer("hello world", UTF_8))
-      Future.value(response)
-    }
-  }
-
-
-  /**
    * Handles the messages coming in to the service. (From the
    * other data centers
    */
-  class MessagesIn extends Service[Request, Response] {
-    def apply(request: Request) = {
-      println("Got $$$$$" + request.content.toString(UTF_8))
+  class MessagesIn extends Service[HttpRequest, HttpResponse] {
+    def apply(request: HttpRequest) = {
+      println("Got $$$$$" + request.getContent.toString(UTF_8))
       val response = new DefaultHttpResponse(HTTP_1_1, OK)
       response.setContent(copiedBuffer("search service world", UTF_8))
       Future.value(Response(response))
@@ -100,13 +88,14 @@ object HttpServer {
   /**
    * Streams the messages to all our Data centers.
    */
-  class MessagesOut extends Service[HttpRequest, StreamResponse] {
+  //class MessagesOut extends Service[HttpRequest, StreamResponse] {
+  class MessagesOut extends Service[HttpRequest, StreamResponse ] {
     def apply(request: HttpRequest) = Future {
+      println("Got $$$$$ " + request.getContent.toString(UTF_8))
       val subscriber = new Broker[ChannelBuffer]
       addBroker ! subscriber
       new StreamResponse {
-        val httpResponse = new DefaultHttpResponse(
-          request.getProtocolVersion, HttpResponseStatus.OK)
+        val httpResponse = new DefaultHttpResponse(HTTP_1_1, OK)
 
         def messages = subscriber.recv
 
@@ -131,33 +120,14 @@ object HttpServer {
 
 
   def main(args: Array[String]) {
-    val respond = new Respond
 
-    val routingService =
-      MyRoutingService.byRequest { request =>
-        (request.method, Path(request.path)) match {
-          case Method.Post -> Root / "messages"  => myMessagesIn
-          case Method.Get  -> Root / "messages"  => myMessagesOut
-        }
-      }
-
-    // compose the Filters and Service together:
-    //val myService: Service[HttpRequest, HttpResponse] = handleExceptions andThen respond
+    val myService: Service[HttpRequest, StreamResponse] =  myMessagesOut //andThen myMessagesIn
 
     val server: Server = ServerBuilder()
-      .codec(RichHttp[Request](Http()))
+      //.codec(RichHttp[Request](Http()))
+      .codec(Stream())
       .bindTo(new InetSocketAddress(8080))
       .name("httpserver")
-      .build(routingService)
+      .build(myService)
   }
-}
-
-object MyRoutingService {
-  def byRequest[REQUEST](routes: PartialFunction[Request, Service[REQUEST, Response]]) =
-    new RoutingService(
-      new PartialFunction[Request, Service[REQUEST, Response]] {
-        def apply(request: Request)       = routes(request)
-        def isDefinedAt(request: Request) = routes.isDefinedAt(request)
-      }
-    )
 }

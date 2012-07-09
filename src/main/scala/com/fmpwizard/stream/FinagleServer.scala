@@ -14,6 +14,7 @@ import org.jboss.netty.handler.codec.http.{DefaultHttpResponse, HttpRequest, Htt
 import org.jboss.netty.util.CharsetUtil
 import scala.util.Random
 import actors.{RemoveMessage, GetMessages, InboxActor}
+import org.jboss.netty.util.CharsetUtil._
 
 
 /**
@@ -64,6 +65,7 @@ object FinagleServer {
     println("Starting Finagle!!")
     val myService = new Service[HttpRequest, StreamResponse] {
       def apply(request: HttpRequest) = Future {
+        println("Got $$$$$" + request.getContent().toString(UTF_8))
         val subscriber = new Broker[ChannelBuffer]
         addBroker ! subscriber
         new StreamResponse {

@@ -7,7 +7,7 @@ import net.liftweb.actor.LiftActor
 
 object InboxActor extends LiftActor{
 
-  private[this] var message = ""
+  private[this] var message = "Diego\n"
   override def messageHandler ={
     case GetMessages    => reply(message)
     case AddMessage(s)  => message = s
