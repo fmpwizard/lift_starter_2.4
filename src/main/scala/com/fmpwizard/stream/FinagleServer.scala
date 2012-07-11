@@ -13,7 +13,7 @@ import org.jboss.netty.buffer.ChannelBuffers.copiedBuffer
 import org.jboss.netty.handler.codec.http.{DefaultHttpResponse, HttpRequest, HttpResponseStatus}
 import org.jboss.netty.util.CharsetUtil
 import scala.util.Random
-import actors.{RemoveMessage, GetMessages, InboxActor}
+import actors._
 import org.jboss.netty.util.CharsetUtil._
 
 
@@ -50,7 +50,6 @@ object FinagleServer {
   private[this] def produce(r: Random, t: Timer) {
     t.schedule(1.second.fromNow) {
       val chatMsg = InboxActor !? GetMessages
-      InboxActor ! RemoveMessage
       //val m = copiedBuffer(r.nextInt.toString + "\n", CharsetUtil.UTF_8)
       val m = copiedBuffer(chatMsg.toString + "\n", CharsetUtil.UTF_8)
       messages.send(m) andThen produce(r, t)

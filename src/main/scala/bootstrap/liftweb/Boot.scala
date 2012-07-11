@@ -1,4 +1,3 @@
-/*
 package bootstrap.liftweb
 
 import net.liftweb._
@@ -7,7 +6,7 @@ import util._
 import common._
 import http._
 import sitemap._
-import com.fmpwizard.stream.{LiftServer, FinagleServer}
+import com.fmpwizard.stream.{LiftStream, FinagleServer}
 
 
 /**
@@ -47,13 +46,12 @@ class Boot {
     LiftRules.htmlProperties.default.set((r: Req) =>new Html5Properties(r.userAgent))
 
     LiftRules.statelessDispatch.append({
-      case Req("stream" :: Nil, _, GetRequest) => () => LiftServer.send
+      case Req("stream" :: Nil, _,    GetRequest) => () => LiftStream.send
+      case req @ Req("stream" :: Nil, _, PostRequest | PutRequest) => () => LiftStream.receive(req.params)
     })
 
-    //FinagleServer.main(new Array[String](1))
 
   } //boot
 
 } //Boot
 
-*/

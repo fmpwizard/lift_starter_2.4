@@ -15,13 +15,11 @@ import com.twitter.finagle.builder.{Server, ServerBuilder}
 import com.twitter.finagle.stream.{Stream, StreamResponse}
 import com.twitter.concurrent.{Offer, Broker}
 import org.jboss.netty.buffer.ChannelBuffer
-import path./
 import scala.util.Random
-import com.fmpwizard.actors.{RemoveMessage, GetMessages, InboxActor}
-import com.twitter.finagle.http.path./
+import com.fmpwizard.actors._
 import org.jboss.netty.buffer.ChannelBuffers.copiedBuffer
 import org.jboss.netty.util.CharsetUtil
-import com.twitter.finagle.http.RichHttp
+
 
 /**
  * This example demonstrates a sophisticated HTTP server that handles exceptions
@@ -59,7 +57,7 @@ object HttpServer {
   private[this] def produce(r: Random, t: Timer) {
     t.schedule(1.second.fromNow) {
       val chatMsg = InboxActor !? GetMessages
-      InboxActor ! RemoveMessage
+      //InboxActor ! RemoveMessage
       //val m = copiedBuffer(r.nextInt.toString + "\n", CharsetUtil.UTF_8)
       val m = copiedBuffer(chatMsg.toString + "\n", CharsetUtil.UTF_8)
       messages.send(m) andThen produce(r, t)

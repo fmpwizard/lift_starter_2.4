@@ -1,19 +1,25 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
-    <title>Home</title>
-</head>
-<body class="lift:content_id=main">
-<div id="main" class="lift:surround?with=default;at=content">
-    <h2>Welcome to your project!</h2>
-    <div data-lift="lift:sample?form=post">
-        <div>
-            Does full page reload: <input type="submit" value="Submit" id="button"><br>
-            Does ajax submit:<input type="submit" value="Submit" id="button2">
-        </div>
-    </div>
-</div>
-</body>
-</html>
 
+<div id="main" class="lift:surround?with=default;at=content">
+  <h2>Welcome to our distributed chat server!</h2>
+  <div data-lift="form.ajax">
+    <div data-lift="ChatClient">
+      <strong>Messages</strong>
+      <ul id="messages">
+        <li></li>
+      </ul>
+      <hr>
+      <form class="form-horizontal">
+        <fieldset>
+          <div class="control-group">
+            <input id="nickname" type="text" class="input-medium" placeholder="Nickname">
+          </div>
+          <div class="control-group">
+            <textarea class="input-xlarge" id="message" rows="3"></textarea>
+            <button type="submit" class="btn">Chat!</button>
+          </div>
+        <fieldset>
+      </form>
+      <hr>
+    </div>
+  </div>
+</div>
