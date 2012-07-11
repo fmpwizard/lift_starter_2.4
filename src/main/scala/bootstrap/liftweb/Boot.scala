@@ -2,11 +2,12 @@ package bootstrap.liftweb
 
 import net.liftweb._
 import util._
+import Helpers._
 
 import common._
 import http._
 import sitemap._
-import com.fmpwizard.stream.{LiftStream, FinagleServer}
+import com.fmpwizard.service.CentralChatServer
 
 
 /**
@@ -45,10 +46,9 @@ class Boot {
     // set DocType to HTML5
     LiftRules.htmlProperties.default.set((r: Req) =>new Html5Properties(r.userAgent))
 
-    LiftRules.statelessDispatch.append({
-      case Req("stream" :: Nil, _,    GetRequest) => () => LiftStream.send
-      case req @ Req("stream" :: Nil, _, PostRequest | PutRequest) => () => LiftStream.receive(req.params)
-    })
+
+    Schedule.schedule(() => CentralChatServer.readChangesFeed(), 0 seconds)
+
 
 
   } //boot

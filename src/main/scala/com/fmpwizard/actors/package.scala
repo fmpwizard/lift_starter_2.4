@@ -9,6 +9,6 @@ package object actors {
   case class AddMessages(user: Box[String], m: Box[String])
 
   case class Message(user: String, msg: String, dateTime: DateTime)
+  case class Since(s: BigInt)
 
-  //https://fmpwizard.iriscouch.com:6984/_utils/database.html?chatserver
 }
