@@ -46,8 +46,8 @@ class Boot {
     // set DocType to HTML5
     LiftRules.htmlProperties.default.set((r: Req) =>new Html5Properties(r.userAgent))
 
-
-    Schedule.schedule(() => CentralChatServer.readChangesFeed(), 0 seconds)
+    //Initial schedule to get the ball rolling :)
+    Schedule(() => CentralChatServer.readChangesFeed())
 
 
 

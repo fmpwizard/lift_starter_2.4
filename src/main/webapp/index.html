@@ -1,8 +1,13 @@
 
 <div id="main" class="lift:surround?with=default;at=content">
   <h2>Welcome to our distributed chat server!</h2>
+  <h3>You can access one of the chat servers at
+    <a href="http://lift-comet.fmpwizard.cloudbees.net/">server1</a>
+  and the other at <a href="http://lift-comet-2.fmpwizard.cloudbees.net/">server2</a>
+  </h3>
   <div data-lift="form.ajax">
     <div data-lift="AddChatComet">
+      <span id="hostname">This server's hostname is </span><br>
       <strong>Messages</strong>
       <ul id="messages">
         <li></li>
@@ -14,7 +19,9 @@
             <input id="nickname" type="text" class="input-medium" placeholder="Nickname">
           </div>
           <div class="control-group">
-            <textarea class="input-xlarge" id="message" rows="3"></textarea>
+            <input type="text" class="input-xlarge" id="message">
+          </div>
+          <div class="control-group">
             <button type="submit" class="btn">Chat!</button>
           </div>
         <fieldset>

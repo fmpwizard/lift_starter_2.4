@@ -28,6 +28,7 @@ class ChatClient extends NamedCometActorTrait{
         }""".format( """$('#nickname').val()""", """$('#message').val()""")
 
       "button [onclick]" #> SHtml.jsonCall(JE.JsRaw(json), ChatClient.sendChat _) &
+      "#hostname *+"     #> <strong>{java.net.InetAddress.getLocalHost.getHostName}</strong> &
       "li" #> renderedMessages.map(x => "* *" #> "%s - %s: %s - from %s".format(x.dateTime.toString("HH:mm:ss"), x.user, x.message, x.server) )
   }
 
@@ -57,13 +58,8 @@ object ChatClient extends Logger{
   def sendChat(j: JValue): JsCmd = {
     val name = (j \ "name").extract[String]
     val message = (j \ "message").extract[String]
-
     info("We got %s" format j)
-
     InboxActor ! Message(name, message, new DateTime)
-
     JE.JsRaw("""$('#message').val('')""").cmd
-    //JsCmds.Noop
-
   }
 }

@@ -18,6 +18,7 @@ import org.jboss.netty.handler.codec.http.HttpHeaders.Names._
 import org.jboss.netty.util.CharsetUtil
 import org.joda.time.DateTime
 import net.liftweb.common.Logger
+import org.joda.time.format.DateTimeFormat
 
 
 object CentralChatServer extends Logger{
@@ -43,7 +44,7 @@ object CentralChatServer extends Logger{
 
     val j = ("user" -> m.user) ~
       ("msg" -> m.msg) ~
-      ("datetime" -> m.dateTime.toString("YYY MMM dd hh:mm:ss z")) ~
+      ("datetime" -> m.dateTime.toString("YYY MMM dd hh:mm:ss ZZ")) ~
       ("host" -> java.net.InetAddress.getLocalHost.getHostName)
 
     val path = "/chatserver/%s".format(Helpers.nextFuncName)
@@ -64,7 +65,6 @@ object CentralChatServer extends Logger{
     }.onFailure(err =>
       error("Cound not send data to couch from sendToCouchDB %s" format err.getStackTrace)
     )
-
   }
 
   def readChangesFeed(since: BigInt = 0): Unit = {
@@ -83,7 +83,10 @@ object CentralChatServer extends Logger{
         JField("msg" , JString(message))     <- child
         JField("datetime",JString(datetime)) <- child
         JField("host",JString(hostname))     <- child
-      } yield MessageRow(new DateTime(), username, message,hostname)
+      } yield {
+        val fmt = DateTimeFormat.forPattern("YYY MMM dd hh:mm:ss ZZ")
+        MessageRow(fmt.parseDateTime(datetime), username, message,hostname)
+      }
 
 
       debug("json is %s".format(json))
@@ -100,7 +103,7 @@ object CentralChatServer extends Logger{
 
     }.onFailure{
       err =>{
-        error("Cound not read data from couch from readChangesFeed %s" format err.getStackTrace)
+        error("Cound not read data from couch from readChangesFeed %s %s %s".format( err.getCause, err.getMessage, err.getStackTraceString ))
         InboxActor ! Since(0)
         client.release()
       }

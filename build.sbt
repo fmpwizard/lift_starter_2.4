@@ -8,6 +8,8 @@ scalaVersion := "2.9.1"
 
 seq(webSettings :_*)
 
+CloudBees.applicationId := Some("lift-comet")
+
 resolvers ++= Seq("snapshots" at "http://oss.sonatype.org/content/repositories/snapshots",
                   "releases"  at "http://oss.sonatype.org/content/repositories/releases",
                   "twitter"   at "http://maven.twttr.com"
