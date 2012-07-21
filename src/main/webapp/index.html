@@ -1,19 +1,35 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
-    <title>Home</title>
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+  <title>Home</title>
 </head>
 <body class="lift:content_id=main">
-<div id="main" class="lift:surround?with=default;at=content">
+  <div id="main" class="lift:surround?with=default;at=content">
     <h2>Welcome to your project!</h2>
-    <div data-lift="lift:sample?form=post">
-        <div>
-            Does full page reload: <input type="submit" value="Submit" id="button"><br>
-            Does ajax submit:<input type="submit" value="Submit" id="button2">
+    <form data-lift="form.ajax" action="#" class="well form-inline">
+      <div data-lift="Sample">
+        <div id="input1" class="clonedInput">
+          <label for="Text1">Some textarea box</label><br>
+          <textarea class="emailContent" id="Text1" rows="4" cols="100"></textarea><br>
+          <hr>
+          <label for="runReminderInDays1">Related numeric field: </label>
+          <input id="runReminderInDays1" class="runReminderInDays" size="2">
         </div>
+        <div>
+          <input class="btn btn-primary" type="button" id="btnAdd" value="add another row" />
+          <input class="btn btn-danger" type="button" id="btnDel" value="remove last row" />
+        </div>
+        <div>
+          <button id="next" value="Submit" type="button" class="btn"><Lift:Loc>Finish</Lift:Loc></button>
+        </div>
+      </div>
+    </form>
+    <div data-lift="Sample.sendToServer">
+      <script id="sendToServer"></script>
+      <script id="initDynamic"></script>
     </div>
-</div>
+  </div>
 </body>
 </html>
 
