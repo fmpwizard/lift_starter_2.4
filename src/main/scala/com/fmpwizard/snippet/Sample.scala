@@ -89,9 +89,9 @@ object Sample extends Loggable{
       JArray(child) <- x
       JArray(List(JString(text), JString(n))) <- child
     } yield{
-      logger.info("The text we got was: %s and the related field value was: %s".format(text, n.toInt))
+      asInt(n).map( num => logger.info("The text we got was: %s and the related field value was: %s".format(text,num)))
       //This is where you can store the data on a database.
-      (text, n.toInt)
+      asInt(n).map( num => (text, num))
     }
     logger.info(res)
     JsCmds.Alert("The server got %s" format res)
