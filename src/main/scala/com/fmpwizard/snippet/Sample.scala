@@ -4,26 +4,26 @@ import net.liftweb.http.SHtml
 import net.liftweb.http.js.{JsCmd, JE, JsCmds}
 import net.liftweb.util.Helpers._
 import net.liftweb.http.js.JsCmds.{Function, Script}
-import net.liftweb.http.js.JE.JsVar
-import net.liftweb.common.{Loggable, Full}
+import net.liftweb.common.{Loggable}
 import net.liftweb.json.JsonAST._
-import net.liftweb.json.DefaultFormats
 import net.liftweb.json.JsonAST.JString
 import net.liftweb.common.Full
-import net.liftweb.json.JsonAST.JInt
 import net.liftweb.http.js.JE.JsVar
 import net.liftweb.json.JsonAST.JArray
+import net.liftweb.util.Helpers
 
 object Sample extends Loggable{
 
+
+  val ourFnName = Helpers.nextFuncName
   /**
    * JavaScript to collect our form data
    */
   val js1 =
     """
       |window.dyTable = new window.fmpwizard.views.DynamicFields();
-      |window.dyTable.collectFormData();
-    """.stripMargin
+      |window.dyTable.collectFormData(%s);
+    """.format(ourFnName).stripMargin
   /**
    * JavaScript to setup the adding rows to the page action
    */
@@ -45,7 +45,7 @@ object Sample extends Loggable{
 
   def sendToServer = {
     "#sendToServer" #> Script(
-      Function("sendDataToServer", List("paramName"),
+      Function(ourFnName, List("paramName"),
         SHtml.jsonCall(JsVar("paramName"), (s: JValue) => addRowsToDB(s) )._2.cmd //use on lift >= 2.5
         //SHtml.jsonCall(JsVar("paramName"), (s: Any) => addRowsToDB(s) )._2.cmd //Use this on Lift < 2.5
       )

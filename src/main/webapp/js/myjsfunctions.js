@@ -29,13 +29,13 @@
               $('#btnDel').attr('disabled','disabled');
           });
         };
-        self.collectFormData = function() {
+        self.collectFormData = function(fnName) {
           var formData = new Array();
           $(".emailContent").each(function() {
             formData.push([$(this).val(), $(this).parent().children('input').val()]);
           });
           console.log(formData)
-          sendDataToServer(formData);
+          fnName(formData);
         };
       },
       SomeOtherNameSpace: function(){
