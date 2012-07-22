@@ -12,7 +12,7 @@ import net.liftweb.http.js.JE.JsVar
 import net.liftweb.json.JsonAST.JArray
 import net.liftweb.util.Helpers
 
-object Sample extends Loggable{
+class Sample extends Loggable{
 
 
   val ourFnName = Helpers.nextFuncName
