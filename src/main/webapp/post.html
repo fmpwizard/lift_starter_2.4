@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+  <title>Home</title>
+</head>
+<body class="lift:content_id=main">
+<div id="main" class="lift:surround?with=default;at=content">
+
+  <script data-lift="head" type="text/javascript" >
+    $(document).ready(function() {
+      $("#markItUp").markItUp(myTextileSettings);
+    });
+  </script>
+
+  <h2>Welcome a textile example</h2>
+  <br>
+  <div data-lift="Sample.sendToServer">
+    <div id="sendToServer"></div>
+    <div>
+      <textarea id="markItUp"></textarea>
+      <br>
+      <br>
+      <a href="" id="link"></a>
+      <br>
+      <div id="markItUpResult" class="markItUpContainer" style="width: 63em"></div>
+      <hr>
+    </div>
+  </div>
+</div>
+</body>
+</html>
+

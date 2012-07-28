@@ -1,11 +1,16 @@
 package bootstrap.liftweb
 
 import net.liftweb._
+import db.{DB, DefaultConnectionIdentifier, StandardDBVendor}
 import util._
 
 import common._
 import http._
 import sitemap._
+
+import mapper._
+import com.fmpwizard.model.TextTable
+import com.fmpwizard.utils.Paths
 
 
 /**
@@ -14,20 +19,27 @@ import sitemap._
  */
 class Boot {
   def boot {
-    //Conexion(host = "ciriscr.com", baseDatos = "Africa")
-    //RegisterJodaTimeConversionHelpers()
+
+    if (!DB.jndiJdbcConnAvailable_?) {
+      val vendor =
+        new StandardDBVendor(Props.get("db.driver") openOr "org.h2.Driver",
+          Props.get("db.url") openOr
+            "jdbc:h2:lift_proto.db;AUTO_SERVER=TRUE",
+          Props.get("db.user"), Props.get("db.password"))
+
+      LiftRules.unloadHooks.append(vendor.closeAllConnections_! _)
+
+      DB.defineConnectionManager(DefaultConnectionIdentifier, vendor)
+    }
+
+    Schemifier.schemify(true, Schemifier.infoF _, TextTable)
 
     // where to search snippet
     LiftRules.addToPackages("com.fmpwizard")
 
-    // Build SiteMap
-    val entries = List(
-      Menu.i("Index") / "index"
-    )
-
     // set the sitemap.  Note if you don't want access control for
     // each page, just comment this line out.
-    LiftRules.setSiteMap(SiteMap(entries:_*))
+    LiftRules.setSiteMap(Paths.siteMap)
 
 
     //Show the spinny image when an Ajax call starts
