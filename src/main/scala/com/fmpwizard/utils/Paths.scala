@@ -6,8 +6,11 @@ import net.liftweb.common.Full
 
 
 /**
- * We define this PAths object to hold all of our sitemap
+ * We define this Paths object to hold all of our sitemap
  * entries.
+ *
+ * Thanks Tim Nelson for the tip.
+ *
  */
 object Paths{
   val post = Menu.param[TextTable]("post",

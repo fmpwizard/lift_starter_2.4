@@ -18,7 +18,7 @@ class Sample extends Loggable{
   val blogPost = Paths.post.toLoc.currentValue.dmap(TextTable.create)(x => x)
 
   def render = {
-    "#link" #> SHtml.button("Create post", () => create)
+    "#link" #> SHtml.button("Create new post", () => create)
   }
 
   /**
@@ -48,6 +48,10 @@ class Sample extends Loggable{
   }
 }
 
+
+/**
+ * I'm getting in the habit of moving logic to an object, which makes testing easier.
+ */
 object Sample extends Loggable{
   /**
    * Here we parse the textile text and convert it into html
