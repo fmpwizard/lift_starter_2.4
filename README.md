@@ -1,3 +1,10 @@
+    git clone https://github.com/fmpwizard/lift_starter_2.4.git
+
+    cd lift_starter_2.4
+
+    git checkout lift_textile
+
+
 sbt is included so run:
 
 
