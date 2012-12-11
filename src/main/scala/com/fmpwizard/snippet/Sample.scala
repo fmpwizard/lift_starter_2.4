@@ -3,14 +3,22 @@ package com.fmpwizard.snippet
 import net.liftweb.http.SHtml
 import net.liftweb.http.js.{JE, JsCmds, JsCmd}
 import net.liftweb.util.Helpers._
+import net.liftweb.common.Loggable
 
-class Sample{
+class Sample extends Loggable {
   def render = {
-    "#button2 [onclick]" #> SHtml.ajaxCall( JE.JsRaw("this.name"),  handleClick _ )
+    var one = ""
+    "#one" #> SHtml.ajaxText(one, string => {
+      one = string
+      logger.info("You just entered '%s' on the browser" format string)
+      JE.JsRaw("""alert("You just entered '%s'")""".format(string)).cmd
+    }) &
+    "#button2 [onclick]" #> SHtml.ajaxCall( JE.JsRaw("""$("#one").val()"""),  handleClick _ )
   }
 
   def handleClick(s: String): JsCmd = {
-    JE.JsRaw("""alert("Button clicked, value was: %s")""".format(s)).cmd
+    logger.info("We got '%s' from the server" format s)
+    JE.JsRaw("""alert("Button clicked, value was: '%s'")""".format(s)).cmd
   }
 
 

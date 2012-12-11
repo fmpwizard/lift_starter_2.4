@@ -1,4 +1,4 @@
-name := "starter"
+name := "ajaxTExtAndSubmit"
 
 version := "0.1"
 
