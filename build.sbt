@@ -1,4 +1,4 @@
-name := "starter"
+name := "comet-presentation"
 
 version := "0.1"
 

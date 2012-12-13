@@ -8,12 +8,29 @@
 <div id="main" class="lift:surround?with=default;at=content">
   <h2>Welcome to your project!</h2>
   <div data-lift="form.ajax">
-    <form action="#" data-lift="lift:sample">
+    <form action="#" data-lift="Sample">
       <div>
-        Does ajax submit:<input type="submit" value="Submit" id="button2" name="">
+        Does ajax submit:<input type="submit" value="Submit" id="button2" name="Super data">
       </div>
     </form>
   </div>
+  <hr>
+  <div>
+    <span>This is the comet area</span>
+    <div data-lift="comet?type=SampleComet">
+      <span id="messageBox"></span>
+    </div>
+  </div>
+  <hr>
+  <div data-lift="form.ajax">
+    <form action="#" data-lift="Sample.changeLocale">
+      <div>
+        <p>Change the locale:</p>
+        <span id="localeSelect"></span>
+      </div>
+    </form>
+  </div>
+  <hr>
 </div>
 </body>
 </html>
