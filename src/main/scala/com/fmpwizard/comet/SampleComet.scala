@@ -1,40 +1,42 @@
 package com.fmpwizard.comet
 
 import net.liftweb.http._
-import net.liftweb.util.PassThru
+import net.liftweb.util.{Schedule, PassThru}
+import net.liftweb.util.Helpers._
 import net.liftweb.http.js.JE
-import net.liftweb.common.Box
-import xml.NodeSeq
-import java.util.Locale
+import com.fmpwizard.snippet.{UserCount, ShowCount}
 
 class SampleComet extends CometActor {
 
+  private var cnt = 0
   def render = {
     PassThru
   }
 
-  // make this method visible so that we can initialize the actor
-  override def initCometActor(theSession: LiftSession,
-                              theType: Box[String],
-                              name: Box[String],
-                              defaultXml: NodeSeq,
-                              attributes: Map[String, String]) {
-    super.initCometActor(theSession, theType, name, defaultXml,
-      attributes)
-  }
 
   override def lowPriority = {
-    case Data(value) =>
-      partialUpdate(JE.JsRaw("""$("#messageBox").html("%s")""" format S.?(value)).cmd)
+    case UserCnt(cnt) =>
+      partialUpdate(JE.JsRaw("""$("#userCnt").text(%s)""".format(cnt)).cmd)
+      Schedule.schedule(this, Start, 2 seconds)
+    case Start => (UserCount !< ShowCount).foreach{ res =>
+      val currentCnt = res.asInstanceOf[Int]
+      if(cnt != currentCnt){
+        this ! UserCnt(currentCnt)
+        cnt = currentCnt
+      } else {
+        Schedule.schedule(this, Start, 2 seconds)
+      }
+
+    }
+
   }
+
+  override def localSetup() = {
+    this ! Start
+    super.localSetup()
+  }
+
 }
 
-/**
- * The case class we pass around to the comet actor
- */
-case class Data(value: String)
-
-/**
- * The session variable that keeps the current locale (as selected on the drop down on the index page
- */
-object cometLocale extends SessionVar[Locale](Locale.getDefault)
+case class UserCnt(cnt: Int)
+case object Start

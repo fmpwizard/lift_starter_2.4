@@ -6,29 +6,14 @@
 </head>
 <body class="lift:content_id=main">
 <div id="main" class="lift:surround?with=default;at=content">
+  <div data-lift="Heartbeat"></div>
   <h2>Welcome to your project!</h2>
-  <div data-lift="form.ajax">
-    <form action="#" data-lift="Sample">
-      <div>
-        Does ajax submit:<input type="submit" value="Submit" id="button2" name="Super data">
-      </div>
-    </form>
-  </div>
   <hr>
   <div>
-    <span>This is the comet area</span>
+    <span>Total number of unique users:</span>
     <div data-lift="comet?type=SampleComet">
-      <span id="messageBox"></span>
+      <span id="userCnt"></span>
     </div>
-  </div>
-  <hr>
-  <div data-lift="form.ajax">
-    <form action="#" data-lift="Sample.changeLocale">
-      <div>
-        <p>Change the locale:</p>
-        <span id="localeSelect"></span>
-      </div>
-    </form>
   </div>
   <hr>
 </div>
