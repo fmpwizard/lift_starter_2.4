@@ -21,12 +21,6 @@ object Sample{
     Locale.FRANCE.toString
   )
 
-  /**
-   * A button that sends an ajax message to the server
-   */
-  def render = {
-    "#button2 [onclick]" #> SHtml.ajaxInvoke(() => handleClick("login"))
-  }
 
   /**
    * Sends a message to a comet of class SampleComet, with no name

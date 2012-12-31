@@ -14,9 +14,10 @@ resolvers ++= Seq("snapshots" at "http://oss.sonatype.org/content/repositories/s
 libraryDependencies ++= {
 val liftVersion = "2.5-SNAPSHOT"
   Seq(
-  "net.liftweb" %% "lift-webkit" % liftVersion % "compile",
+  "net.liftweb"       %% "lift-webkit" % liftVersion % "compile",
   "org.eclipse.jetty" % "jetty-webapp" % "8.0.1.v20110908" % "container",
-  "ch.qos.logback" % "logback-classic" % "0.9.26"
+  "ch.qos.logback"    % "logback-classic" % "0.9.26",
+  "net.liftmodules"   %% "fobo"        % (liftVersion+"-0.7.7-SNAPSHOT")
   )
 }
 

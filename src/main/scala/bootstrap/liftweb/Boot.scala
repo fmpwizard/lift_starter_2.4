@@ -1,6 +1,7 @@
 package bootstrap.liftweb
 
 import net.liftweb._
+import sitemap.Loc.QueryParameters
 import util._
 
 import common._
@@ -8,9 +9,9 @@ import http._
 import js.JE
 import provider.HTTPRequest
 import sitemap._
-import com.fmpwizard.comet.{cometLocale, Data, SampleComet}
-import xml.NodeSeq
-import java.util.Locale
+import com.fmpwizard.comet._
+import net.liftmodules.FoBo
+
 
 
 /**
@@ -26,7 +27,7 @@ class Boot {
     // Build SiteMap
     val entries = List(
       Menu.i("Index") / "index",
-      Menu.i("Item") / "item"
+      Menu.i("Item") / "item" >> QueryParameters(() => List(("item", "Chromebook")))
     )
 
     // set the sitemap.  Note if you don't want access control for
@@ -65,6 +66,11 @@ class Boot {
 
     //Store the locale in a sessionVar, so we can access from a comet
     LiftRules.localeCalculator = (req: Box[HTTPRequest]) => cometLocale.is
+
+    //We skip the FoBo built in JQuery in favor for the FoBo included lift-jquery-module
+    FoBo.InitParam.JQuery=FoBo.JQuery182
+    FoBo.InitParam.ToolKit=FoBo.Bootstrap222
+    FoBo.init()
 
   } //boot
 

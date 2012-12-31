@@ -1,37 +1,21 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
-  <title>Home</title>
-</head>
-<body class="lift:content_id=main">
 <div id="main" class="lift:surround?with=default;at=content">
-  <h2>Welcome to your project!</h2>
-  <div data-lift="form.ajax">
-    <form action="#" data-lift="Sample">
-      <div>
-        Does ajax submit:<input type="submit" value="Submit" id="button2" name="Super data">
-      </div>
-    </form>
-  </div>
+  <h2>Comet and locale</h2>
   <hr>
   <div>
-    <span>This is the comet area</span>
+    <div data-lift="form.ajax">
+      <form action="#" data-lift="Sample.changeLocale">
+        <div>
+          <h5>Change the locale:</h5>
+          <span id="localeSelect"></span>
+        </div>
+      </form>
+    </div>
+    <div class="alert alert-info span6">A translated message will appear as soon as you select an entry from the drop down menu</div>
     <div data-lift="comet?type=SampleComet">
-      <span id="messageBox"></span>
+      <div class="alert alert-success span6">
+        <div id="messageBox">Sample text</div>
+      </div>
     </div>
   </div>
   <hr>
-  <div data-lift="form.ajax">
-    <form action="#" data-lift="Sample.changeLocale">
-      <div>
-        <p>Change the locale:</p>
-        <span id="localeSelect"></span>
-      </div>
-    </form>
-  </div>
-  <hr>
 </div>
-</body>
-</html>
-

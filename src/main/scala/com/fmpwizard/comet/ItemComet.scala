@@ -28,8 +28,8 @@ class ItemComet extends NamedCometActorTrait {
    */
   def render = {
     val price = ItemDB.items.get(item)
-    "#price *"      #> price &
-    "#itemName *+"  #> item &
+    "#price *+"      #> price &
+    "#itemName *"   #> item &
     "#update"       #> SHtml.ajaxButton("Increase", () => increasePrice())
   }
 
@@ -37,7 +37,7 @@ class ItemComet extends NamedCometActorTrait {
    * The two messages that our comet actor listens for.
    */
   override def lowPriority = {
-    case Price(newPrice) => partialUpdate(JE.JsRaw("""$("#price").html("%s")""".format(newPrice)).cmd)
+    case Price(newPrice) => partialUpdate(JE.JsRaw("""$("#price").html("$%s")""".format(newPrice)).cmd)
     case Sold            => partialUpdate(JE.JsRaw("""$("#status").html("Sold.")""").cmd)
   }
 
