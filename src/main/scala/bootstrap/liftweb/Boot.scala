@@ -6,6 +6,7 @@ import util._
 import common._
 import http._
 import sitemap._
+import net.liftmodules.FoBo
 
 
 /**
@@ -43,6 +44,11 @@ class Boot {
 
     // set DocType to HTML5
     LiftRules.htmlProperties.default.set((r: Req) =>new Html5Properties(r.userAgent))
+
+    //We skip the FoBo built in JQuery in favor for the FoBo included lift-jquery-module
+    FoBo.InitParam.JQuery=FoBo.JQuery182
+    FoBo.InitParam.ToolKit=FoBo.Bootstrap222
+    FoBo.init()
 
   } //boot
 

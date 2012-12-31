@@ -18,7 +18,8 @@ val liftVersion = "2.5-SNAPSHOT"
   "org.eclipse.jetty" % "jetty-webapp" % "8.0.1.v20110908" % "container",
   "com.h2database" % "h2" % "1.2.138",
   "org.specs2" %% "specs2" % "1.10" % "test",
-  "ch.qos.logback" % "logback-classic" % "0.9.26"
+  "ch.qos.logback" % "logback-classic" % "0.9.26",
+  "net.liftmodules"   %% "fobo"        % (liftVersion+"-0.7.7-SNAPSHOT")
   )
 }
 
