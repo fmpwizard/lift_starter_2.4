@@ -1,21 +1,21 @@
 <div id="main" class="lift:surround?with=default;at=content">
-  <h2>Comet and locale</h2>
-  <hr>
-  <div>
-    <div data-lift="form.ajax">
-      <form action="#" data-lift="Sample.changeLocale">
-        <div>
-          <h5>Change the locale:</h5>
-          <span id="localeSelect"></span>
-        </div>
-      </form>
+  <div data-lift="Information">
+    <div class="row-fluid">
+      <span class="span2">OS: </span>
+      <span class="span10" id="os"></span>
     </div>
-    <div class="alert alert-info span6">A translated message will appear as soon as you select an entry from the drop down menu</div>
-    <div data-lift="comet?type=SampleComet">
-      <div class="alert alert-success span6">
-        <div id="messageBox">Sample text</div>
-      </div>
+    <div class="row-fluid">
+      <span class="span2">Architecture: </span>
+      <span class="span10" id="os-arch"></span>
+    </div>
+    <div class="row-fluid">
+      <span class="span2">Version: </span>
+      <span class="span10" id="os-version"></span>
+    </div>
+    <div class="row-fluid">
+      <span class="span2">CPU: </span>
+      <span class="span10" id="cpu"></span>
     </div>
   </div>
-  <hr>
 </div>
+

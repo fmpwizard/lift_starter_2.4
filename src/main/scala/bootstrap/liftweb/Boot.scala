@@ -27,7 +27,7 @@ class Boot {
     // Build SiteMap
     val entries = List(
       Menu.i("Index") / "index",
-      Menu.i("Item") / "item" >> QueryParameters(() => List(("item", "Chromebook")))
+      Menu.i("GPIO") / "gpio"
     )
 
     // set the sitemap.  Note if you don't want access control for
@@ -48,24 +48,6 @@ class Boot {
 
     // set DocType to HTML5
     LiftRules.htmlProperties.default.set((r: Req) =>new Html5Properties(r.userAgent))
-
-    //On my page I have both, and ajax component and a comet, so I set both reload the page on lost session
-    LiftRules.noAjaxSessionCmd.default.set(JE.JsRaw("""window.location.reload(true);""").cmd)
-    LiftRules.noCometSessionCmd.default.set(JE.JsRaw("""window.location.reload(true);""").cmd)
-
-    /**
-     * This isn't used much, it is better to override def localSetup()
-     */
-    LiftRules.cometCreation.append{
-      case info@ CometCreationInfo("SampleComet",name,html,attr,session) =>
-        val comet = new SampleComet
-        comet.initCometActor(session, Full("SampleComet"), name, html, attr)
-        comet ! Data("It's me!")
-        comet
-    }
-
-    //Store the locale in a sessionVar, so we can access from a comet
-    LiftRules.localeCalculator = (req: Box[HTTPRequest]) => cometLocale.is
 
     //We skip the FoBo built in JQuery in favor for the FoBo included lift-jquery-module
     FoBo.InitParam.JQuery=FoBo.JQuery182
