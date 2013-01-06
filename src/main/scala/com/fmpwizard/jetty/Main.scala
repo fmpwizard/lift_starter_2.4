@@ -6,6 +6,9 @@ import org.eclipse.jetty.webapp.WebAppContext
 import net.liftweb.util.Props
 import net.liftweb.util.Helpers._
 
+/**
+ * This is to run the embedded jetty
+ */
 object Main {
 
   def main(args: Array[String]): Unit = {

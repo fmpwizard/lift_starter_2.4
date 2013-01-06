@@ -2,6 +2,9 @@ package com.fmpwizard.gpio
 
 import com.pi4j.io.gpio.{RaspiPin, GpioFactory}
 
+/**
+ * This singleton gives us access to each pin from the Raspberry Pi
+ */
 object Controller {
   val gpio = GpioFactory.getInstance()
   val pin1 = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01, "pin1")

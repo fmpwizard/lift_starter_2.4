@@ -14,18 +14,27 @@ import net.liftweb.common.Loggable
 
 class Gpio extends CometActor with Loggable with CometListener {
 
+  /**
+   * We want all our comets to get updates pin statuses
+   */
   def registerWith = GpioCometManager
 
+  /**
+   * Displaying all pins, in a nice list
+   * Also create a toggle button (all run using ajax)
+   */
   def render = {
-    "#pinRow *" #> (1 to 10).toList.map{ p =>
+    "#pinRow *" #> (1 to 16).toList.map{ p =>
       "#pin *"            #> ("pin status: " + str2Pin("pin" + p.toString).isHigh) &
       "#pin [id]"         #> ("pin" + p.toString) &
       "#pinTitle *"       #> ("Pin " + p.toString + ": ") &
       "#toggle [onclick]" #> SHtml.jsonCall(JE.JsRaw("""{"pin" : "pin%s"}""".format(p)), togglePin _)
     }
-
-
   }
+
+  /**
+   * The messages that our comet can handle
+   */
   override def lowPriority = {
     case PinUp(pin)     => pin.high()
     case PinDown(pin)   => pin.low()
@@ -34,12 +43,19 @@ class Gpio extends CometActor with Loggable with CometListener {
       partialUpdate(JE.JsRaw("""$("#%s").html("pin status: %s")""".format(pin.getName, pin.isHigh)).cmd)
   }
 
+  /**
+   * This gets called by pressing the toggle button next to each pin
+   */
   private[this] def togglePin(pin: JValue): JsCmd = {
-    GpioCometManager ! PinToggle(jv2Pin(pin))
+    GpioCometManager ! PinToggle(pin)
     JsCmds.Noop
   }
 
-  private[this] def jv2Pin(in: JValue): GpioPinDigitalOutput = {
+  /**
+   * Implicitly convert a jValue into a Pin
+   * Used in togglePin
+   */
+  private[this] implicit def jv2Pin(in: JValue): GpioPinDigitalOutput = {
     implicit val foprmats = DefaultFormats
     logger.debug("in is %s" format in)
     logger.debug("pin is %s" format ((in \ "pin" ).extract[String]))
@@ -58,6 +74,9 @@ class Gpio extends CometActor with Loggable with CometListener {
     }
   }
 
+  /**
+   * We call this from render
+   */
   private[this] def str2Pin(s: String): GpioPinDigitalOutput = {
     jv2Pin(JObject(List(JField("pin",JString(s)))))
   }
