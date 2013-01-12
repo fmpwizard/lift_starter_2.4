@@ -39,7 +39,8 @@ val liftVersion = "2.5-SNAPSHOT"
   "org.eclipse.jetty" % "jetty-plus"   % "8.1.0.v20120127" % "container, compile",
   "ch.qos.logback"    % "logback-classic" % "0.9.26",
   "net.liftmodules"   %% "fobo"        % (liftVersion+"-0.7.7-SNAPSHOT"),
-  "com.pi4j"          % "pi4j-core"    % "0.0.5-SNAPSHOT" % "compile"
+  "com.pi4j"          % "pi4j-core"    % "0.0.5-SNAPSHOT" % "compile",
+  "com.pi4j"          % "pi4j-device" % "0.0.5-SNAPSHOT" % "compile"
   )
 }
 

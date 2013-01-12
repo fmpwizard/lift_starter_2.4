@@ -1,11 +1,12 @@
 package com.fmpwizard
 
-import com.pi4j.io.gpio.GpioPinDigitalOutput
+import com.pi4j.io.gpio.{GpioPinPwmOutput, GpioPinDigitalOutput}
 
 
 /**
  * Messages to pass to our comet actors
  */
-case class PinUp(pin: GpioPinDigitalOutput)
-case class PinDown(pin: GpioPinDigitalOutput)
-case class PinToggle(pin: GpioPinDigitalOutput)
+sealed trait PinAction
+case class PinToggle(pin: GpioPinDigitalOutput) extends PinAction
+case class PinPulse(pin: GpioPinDigitalOutput) extends PinAction
+case class PinPWM( t:(GpioPinPwmOutput, Int)) extends PinAction

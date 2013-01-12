@@ -3,7 +3,6 @@ package com.fmpwizard.snippet
 import net.liftweb.util.Helpers._
 import net.liftweb.http.DispatchSnippet
 
-
 import com.pi4j.system.SystemInfo
 
 object Information extends DispatchSnippet {

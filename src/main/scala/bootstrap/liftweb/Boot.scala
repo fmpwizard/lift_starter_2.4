@@ -1,7 +1,7 @@
 package bootstrap.liftweb
 
 import net.liftweb._
-import sitemap.Loc.QueryParameters
+import sitemap.Loc.{CalcStateless, QueryParameters}
 import util._
 
 import common._
@@ -26,7 +26,7 @@ class Boot {
 
     // Build SiteMap
     val entries = List(
-      Menu.i("Index") / "index",
+      Menu.i("Index") / "index" >> CalcStateless(() => true ) ,
       Menu.i("GPIO") / "gpio"
     )
 
