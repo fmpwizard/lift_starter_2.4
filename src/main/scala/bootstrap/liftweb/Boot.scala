@@ -1,15 +1,11 @@
 package bootstrap.liftweb
 
 import net.liftweb._
-import sitemap.Loc.{CalcStateless, QueryParameters}
-import util._
+import sitemap.Loc.CalcStateless
 
 import common._
 import http._
-import js.JE
-import provider.HTTPRequest
 import sitemap._
-import com.fmpwizard.comet._
 import net.liftmodules.FoBo
 
 
