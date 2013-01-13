@@ -12,7 +12,7 @@ import com.pi4j.io.gpio.GpioPinPwmOutput
  */
 object GpioCometManager extends LiftActor with ListenerManager with Loggable {
 
-  var pin: PinAction = PinPWM((Controller.pin1, 20))
+  var pin: PinAction = PinToggle(Controller.pin1)
 
   def createUpdate = pin
   override def lowPriority = {
@@ -20,11 +20,6 @@ object GpioCometManager extends LiftActor with ListenerManager with Loggable {
       currentPi.toggle()
       pin = m
       logger.info("3- pin is: " + pin)
-      updateListeners()
-    case m@ PinPWM((currentPin: GpioPinPwmOutput, turn: Int)) =>
-      currentPin.setPwm(turn)
-      logger.info("4- PinPWM Pin: %s turn: %s".format(currentPin, turn))
-      pin = m
       updateListeners()
   }
 }

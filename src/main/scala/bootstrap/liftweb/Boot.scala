@@ -1,7 +1,7 @@
 package bootstrap.liftweb
 
 import net.liftweb._
-import sitemap.Loc.CalcStateless
+import sitemap.Loc.{EarlyResponse, Hidden, CalcStateless}
 
 import common._
 import http._
@@ -23,7 +23,8 @@ class Boot {
     // Build SiteMap
     val entries = List(
       Menu.i("Index") / "index" >> CalcStateless(() => true ) ,
-      Menu.i("GPIO") / "gpio"
+      Menu.i("GPIO") / "gpio",
+      Menu.i("Status") / "ping" >> Hidden >> CalcStateless(() => true ) >> EarlyResponse(() => Full(OkResponse()))
     )
 
     // set the sitemap.  Note if you don't want access control for
