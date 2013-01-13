@@ -1,10 +1,10 @@
 name := "starter"
 
-version := "0.1"
+version := "0.2"
 
 organization := "com.fmpwizard"
 
-scalaVersion := "2.9.1"
+scalaVersion := "2.10.0"
 
 seq(webSettings :_*)
 
@@ -12,14 +12,14 @@ resolvers ++= Seq("snapshots" at "http://oss.sonatype.org/content/repositories/s
                   "releases"  at "http://oss.sonatype.org/content/repositories/releases")
 
 libraryDependencies ++= {
-val liftVersion = "2.5-SNAPSHOT"
+val liftVersion = "2.5-M4"
   Seq(
-  "net.liftweb" %% "lift-webkit" % liftVersion % "compile",
-  "org.eclipse.jetty" % "jetty-webapp" % "8.0.1.v20110908" % "container",
-  "com.h2database" % "h2" % "1.2.138",
-  "org.specs2" %% "specs2" % "1.10" % "test",
-  "ch.qos.logback" % "logback-classic" % "0.9.26",
-  "net.liftmodules"   %% "fobo"        % (liftVersion+"-0.7.7-SNAPSHOT")
+  "net.liftweb"       %% "lift-webkit"    % liftVersion       % "compile",
+  "net.liftmodules"   %% "fobo"           % (liftVersion+"-0.8.0-SNAPSHOT"),
+  "org.specs2"        %% "specs2"         % "1.10"            % "test",
+  "org.eclipse.jetty" % "jetty-webapp"    % "8.0.1.v20110908" % "container",
+  "com.h2database"    % "h2"              % "1.2.138",
+  "ch.qos.logback"    % "logback-classic" % "0.9.26"
   )
 }
 
