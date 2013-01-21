@@ -49,4 +49,6 @@ val liftVersion = "2.5-M4"
 // append -deprecation to the options passed to the Scala compiler
 scalacOptions += "-deprecation"
 
+scalacOptions += "-feature"
+
 

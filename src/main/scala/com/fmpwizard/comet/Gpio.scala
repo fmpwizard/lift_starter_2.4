@@ -10,6 +10,7 @@ import net.liftweb.json._
 import js.{JsCmds, JE, JsCmd}
 import com.pi4j.io.gpio.{GpioPinPwmOutput, GpioPinDigitalOutput}
 import net.liftweb.common.Loggable
+import scala.language.implicitConversions
 
 
 class Gpio extends CometActor with Loggable with CometListener {
@@ -69,25 +70,8 @@ class Gpio extends CometActor with Loggable with CometListener {
     implicit val foprmats = DefaultFormats
     logger.info("in is %s" format in)
     logger.info("pin is %s" format ((in \ "pin" ).extract[String]))
-    (in \ "pin").extract[String] match {
-      case "pin1" => pin1
-      case "pin2" => pin2
-      case "pin3" => pin3
-      case "pin4" => pin4
-      case "pin5" => pin5
-      case "pin6" => pin6
-      case "pin7" => pin7
-      case "pin8" => pin8
-      case "pin9" => pin9
-      case "pin10" => pin10
-      case "pin11" => pin11
-      case "pin12" => pin12
-      case "pin13" => pin13
-      case "pin14" => pin14
-      case "pin15" => pin15
-      case "pin16" => pin16
-      case x => println("we got " + x) ; pin2
-    }
+    val pinString = (in \ "pin").extract[String]
+    gpiolib.str2Pin(pinString).openOr(pin2)
   }
 
   /**
