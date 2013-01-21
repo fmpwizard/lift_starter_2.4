@@ -7,7 +7,7 @@ import common._
 import http._
 import sitemap._
 import net.liftmodules.FoBo
-
+import com.fmpwizard.api.RaspberryPi
 
 
 /**
@@ -50,6 +50,7 @@ class Boot {
     FoBo.InitParam.JQuery=FoBo.JQuery182
     FoBo.InitParam.ToolKit=FoBo.Bootstrap222
     FoBo.init()
+    LiftRules.statelessDispatch.append(RaspberryPi)
 
   } //boot
 
