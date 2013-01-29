@@ -2,12 +2,16 @@ package com.fmpwizard
 package api
 
 import net.liftweb.http.rest.RestHelper
-import net.liftweb.http.{JsonResponse, Req, S, LiftResponse}
+import net.liftweb.http._
 import net.liftweb.common.{Full, Loggable, Box}
 import net.liftweb.util.Helpers._
 import net.liftweb.json._
 import net.liftweb.json.JsonDSL._
 import com.pi4j.io.gpio.GpioPinDigitalOutput
+import comet.GpioCometManager
+import com.fmpwizard.PinUp
+import com.fmpwizard.PinDown
+import com.fmpwizard.PinUp
 
 object RaspberryPi extends Loggable with PiHelper {
 
@@ -59,9 +63,15 @@ trait PiHelper extends RestHelper with Loggable {
 
   def updatePin(pin: GpioPinDigitalOutput, json: JValue): () => Box[LiftResponse] = {
     logger.info("Pin is %s and json is %s".format(pin, json))
-    val status = (json  \ "status").extractOpt[String]
-    status.map { st => pin.setState(st.toBoolean)}
-    val j: JValue = ("pin-status" -> "%s".format(pin.isHigh))
-    j
+    val status = (json  \ "status").extractOpt[Boolean]
+
+    status.map{st =>
+      if (st) {
+        GpioCometManager ! PinUp(pin)
+      } else {
+        GpioCometManager ! PinDown(pin)
+      }
+    }
+    () => Full(OkResponse.apply())
   }
 }

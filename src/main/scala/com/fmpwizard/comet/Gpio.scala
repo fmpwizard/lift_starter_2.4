@@ -40,6 +40,12 @@ class Gpio extends CometActor with Loggable with CometListener {
     case PinToggle(pin) =>
       logger.info("1- pin status: " + pin.getState)
       partialUpdate(JE.JsRaw("""$("#%s").html("pin status: %s")""".format(pin.getName, pin.isHigh)).cmd)
+    case PinUp(pin) =>
+      logger.info("1- pin status: " + pin.getState)
+      partialUpdate(JE.JsRaw("""$("#%s").html("pin status: %s")""".format(pin.getName, pin.isHigh)).cmd)
+    case PinDown(pin) =>
+      logger.info("1- pin status: " + pin.getState)
+      partialUpdate(JE.JsRaw("""$("#%s").html("pin status: %s")""".format(pin.getName, pin.isHigh)).cmd)
     case PinPWM((p, t))      =>
       partialUpdate(JE.JsRaw("""$("#%s").html("pin turn: %s")""".format(p.getName, t)).cmd)
   }
