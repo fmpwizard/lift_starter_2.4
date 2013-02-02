@@ -8,6 +8,8 @@ import http._
 import sitemap._
 import net.liftmodules.FoBo
 import com.fmpwizard.api.RaspberryPi
+import com.fmpwizard.StartRandom
+import com.fmpwizard.comet.GpioCometManager
 
 
 /**
@@ -51,6 +53,9 @@ class Boot {
     FoBo.InitParam.ToolKit=FoBo.Bootstrap222
     FoBo.init()
     LiftRules.statelessDispatch.append(RaspberryPi)
+
+    //Start the lights show
+    GpioCometManager ! StartRandom
 
   } //boot
 

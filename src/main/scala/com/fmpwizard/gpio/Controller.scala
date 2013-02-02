@@ -1,6 +1,6 @@
 package com.fmpwizard.gpio
 
-import com.pi4j.io.gpio.{RaspiPin, GpioFactory}
+import com.pi4j.io.gpio.{GpioPinDigitalOutput, RaspiPin, GpioFactory}
 
 /**
  * This singleton gives us access to each pin from the Raspberry Pi
@@ -23,5 +23,7 @@ object Controller {
   val pin14 = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_14, "pin14")
   val pin15 = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_15, "pin15")
   val pin16 = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_16, "pin16")
+
+  val digitalOutPins: Vector[GpioPinDigitalOutput] = Vector(pin1, pin2, pin3, pin4, pin5, pin6)
 
 }

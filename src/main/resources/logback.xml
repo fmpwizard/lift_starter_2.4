@@ -14,7 +14,7 @@
 
 
 
-    <logger name="com.fmpwizard" level="info" />
+    <logger name="com.fmpwizard" level="warn" />
     <root level="warn">
         <appender-ref ref="STDOUT" />
     </root>
