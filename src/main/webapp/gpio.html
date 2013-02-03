@@ -1,9 +1,18 @@
 <div id="main" class="lift:surround?with=default;at=content">
   <div data-lift="comet?type=Gpio">
+    <div class="row-fluid">
+      <span class="span2">
+        <button id="start-show" class="btn btn-large btn-block btn-success" type="button">Start lights show</button>
+      </span>
+      <span class="span2">
+        <button id="stop-show" class="btn btn-large btn-block btn-danger" type="button">Stop lights show</button>
+      </span>
+    </div>
+    <hr>
     <form data-lift="form.ajax">
       <div class="row-fluid" id="pinRow">
         <span class="span1" id="pinTitle">Pin N: </span>
-        <span class="span2" id="pin"></span>
+        <span class="label label-important" id="pin">False</span>
         <button class="btn btn-primary btn-mini" id="toggle">Toggle</button>
       </div>
     </form>

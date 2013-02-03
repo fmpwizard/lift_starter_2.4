@@ -3,9 +3,8 @@ package com.fmpwizard.comet
 import net.liftweb.actor.LiftActor
 import net.liftweb.http.ListenerManager
 import com.fmpwizard.gpio.Controller
-import net.liftweb.common.{Box, Loggable}
+import net.liftweb.common.Loggable
 import com.fmpwizard._
-import com.pi4j.io.gpio.GpioPinDigitalOutput
 
 /**
  * This LiftActor tells all comet actors in this jvm when a pin state has changed.
@@ -15,6 +14,8 @@ object GpioCometManager extends LiftActor with ListenerManager with Loggable {
   var pin: PinAction = PinToggle(Controller.pin1)
 
   def createUpdate = pin
+
+  private var runShow_? = true
 
   override def lowPriority = {
 
@@ -31,6 +32,12 @@ object GpioCometManager extends LiftActor with ListenerManager with Loggable {
       updateWorld(low)
 
     case StartRandom =>
+      startLightShow()
+
+    case StopRandom =>
+      stopLightShow()
+
+    case InitLightsCron =>
       spiceUpLights()
 
   }
@@ -43,10 +50,21 @@ object GpioCometManager extends LiftActor with ListenerManager with Loggable {
 
   private def spiceUpLights() {
     import util.Random
-    val pin = Random.shuffle( Controller.digitalOutPins ).headOption
-    pin.foreach( p =>   this ! PinToggle( p ) )
+    if ( runShow_? ) {
+      val pin = Random.shuffle( Controller.digitalOutPins ).headOption
+      pin.foreach( p =>   this ! PinToggle( p ) )
+    }
     Thread.sleep(1000)
-    this ! StartRandom
+    this ! InitLightsCron
+
+  }
+
+  private def stopLightShow() {
+    runShow_? = false
+  }
+
+  private def startLightShow() {
+    runShow_? = true
   }
 }
 

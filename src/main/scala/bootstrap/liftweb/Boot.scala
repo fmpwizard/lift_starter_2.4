@@ -8,7 +8,7 @@ import http._
 import sitemap._
 import net.liftmodules.FoBo
 import com.fmpwizard.api.RaspberryPi
-import com.fmpwizard.StartRandom
+import com.fmpwizard._
 import com.fmpwizard.comet.GpioCometManager
 
 
@@ -55,7 +55,7 @@ class Boot {
     LiftRules.statelessDispatch.append(RaspberryPi)
 
     //Start the lights show
-    GpioCometManager ! StartRandom
+    GpioCometManager ! InitLightsCron
 
   } //boot
 

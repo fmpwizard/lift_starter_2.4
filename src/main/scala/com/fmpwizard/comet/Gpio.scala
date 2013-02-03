@@ -3,7 +3,7 @@ package comet
 
 
 import com.fmpwizard._
-import gpio.Controller._
+import com.fmpwizard.gpio.Controller._
 import net.liftweb.util.Helpers._
 import net.liftweb.http._
 import net.liftweb.json._
@@ -11,6 +11,11 @@ import js.{JsCmds, JE, JsCmd}
 import com.pi4j.io.gpio.{GpioPinPwmOutput, GpioPinDigitalOutput}
 import net.liftweb.common.Loggable
 import scala.language.implicitConversions
+import com.fmpwizard.PinDown
+import com.fmpwizard.PinPWM
+import com.fmpwizard.PinToggle
+import com.fmpwizard.PinUp
+import com.fmpwizard.PinPulse
 
 
 class Gpio extends CometActor with Loggable with CometListener {
@@ -26,11 +31,13 @@ class Gpio extends CometActor with Loggable with CometListener {
    */
   def render = {
     "#pinRow *" #> (1 to 16).toList.map{ p =>
-      "#pin *"            #> ("pin status: " + str2Pin("pin" + p.toString).isHigh) &
+      "#pin *"            #> pinStatus("pin" + p)
       "#pin [id]"         #> ("pin" + p.toString) &
       "#pinTitle *"       #> ("Pin " + p.toString + ": ") &
       "#toggle [onclick]" #> SHtml.jsonCall(JE.JsRaw("""{"pin" : "pin%s"}""".format(p)), togglePin _)
-    }
+    } &
+    "#start-show [onclick]" #> SHtml.ajaxInvoke(() => GpioCometManager ! StartRandom) &
+    "#stop-show [onclick]"  #> SHtml.ajaxInvoke(() => GpioCometManager ! StopRandom)
   }
 
   /**
@@ -39,13 +46,13 @@ class Gpio extends CometActor with Loggable with CometListener {
   override def lowPriority = {
     case PinToggle(pin) =>
       logger.info("1- pin status: " + pin.getState)
-      partialUpdate(JE.JsRaw("""$("#%s").html("pin status: %s")""".format(pin.getName, pin.isHigh)).cmd)
+      partialUpdate(updateLEDStatus(pin))
     case PinUp(pin) =>
       logger.info("1- pin status: " + pin.getState)
-      partialUpdate(JE.JsRaw("""$("#%s").html("pin status: %s")""".format(pin.getName, pin.isHigh)).cmd)
+      partialUpdate(updateLEDStatus(pin))
     case PinDown(pin) =>
       logger.info("1- pin status: " + pin.getState)
-      partialUpdate(JE.JsRaw("""$("#%s").html("pin status: %s")""".format(pin.getName, pin.isHigh)).cmd)
+      partialUpdate(updateLEDStatus(pin))
     case PinPWM((p, t))      =>
       partialUpdate(JE.JsRaw("""$("#%s").html("pin turn: %s")""".format(p.getName, t)).cmd)
   }
@@ -83,8 +90,30 @@ class Gpio extends CometActor with Loggable with CometListener {
   /**
    * We call this from render
    */
-  private[this] def str2Pin(s: String): GpioPinDigitalOutput = {
+  private[this] implicit def str2Pin(s: String): GpioPinDigitalOutput = {
     jv2Pin(JObject(List(JField("pin",JString(s)))))
   }
+
+  /**
+   * Update the status and change the css class based on the PIN status
+   */
+  private def updateLEDStatus(p: GpioPinDigitalOutput): JsCmd = {
+    val cssClass = if( p.isHigh ) {
+      JE.JsRaw("""$("#%s").attr("class", "label label-success")""" format p.getName ).cmd
+    } else {
+      JE.JsRaw("""$("#%s").attr("class", "label label-important")""" format p.getName ).cmd
+    }
+    JE.JsRaw("""$("#%s").html("%s")""".format( p.getName, pinStatus(p) ) ).cmd &
+    cssClass
+  }
+
+  private def pinStatus(p: GpioPinDigitalOutput): String = {
+    if( p.isHigh ) {
+      "pin status: On"
+    } else {
+      "pin status: Off"
+    }
+  }
+
 
 }
