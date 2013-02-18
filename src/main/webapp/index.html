@@ -1,12 +1,14 @@
 <div id="main" class="lift:surround?with=default;at=content">
-  <h2>Example ajax button</h2>
+  <h2>Example usage of LAFutures and snippets</h2>
   <div data-lift="form.ajax">
     <form action="#" data-lift="lift:sample">
       <div>
         <div class="alert alert-info">
-          click this button to do an ajax call
+          In a few seconds text will show up just below here.
         </div>
-        <input type="submit" value="Submit" id="button2" name="Name attribute" class="btn btn-primary">
+        <span id="render-thread" class="alert alert-info"></span>
+        <span id="result-from-external-service">Loading data ...</span>
+        <script id="future" name="Name attribute">Test info</script>
       </div>
     </form>
   </div>
