@@ -5,6 +5,8 @@ import net.liftweb.http.ListenerManager
 import com.fmpwizard.gpio.Controller
 import net.liftweb.common.Loggable
 import com.fmpwizard._
+import net.liftweb.util.Schedule
+import net.liftweb.util.Helpers._
 
 /**
  * This LiftActor tells all comet actors in this jvm when a pin state has changed.
@@ -50,13 +52,12 @@ object GpioCometManager extends LiftActor with ListenerManager with Loggable {
 
   private def spiceUpLights() {
     import util.Random
+    import scala.language.postfixOps
     if ( runShow_? ) {
       val pin = Random.shuffle( Controller.digitalOutPins ).headOption
       pin.foreach( p =>   this ! PinToggle( p ) )
     }
-    Thread.sleep(1000)
-    this ! InitLightsCron
-
+    Schedule.schedule(this, InitLightsCron, 1 second )
   }
 
   private def stopLightShow() {

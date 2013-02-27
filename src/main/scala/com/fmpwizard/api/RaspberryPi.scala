@@ -51,7 +51,7 @@ trait PiHelper extends RestHelper with Loggable {
 
     val json = (gpio.getProvisionedPins.map(_.getName)).foldLeft(JObject(Nil))(
       (jvalues , num) =>
-        ("pin-uri" -> (PiAST.GPIO + "/%s" format num)) ~  jvalues
+        JObject( List( JField( "pin-uri", ( PiAST.GPIO + "/%s" format num ) ) ) ) ~  jvalues
     )
     json
   }
