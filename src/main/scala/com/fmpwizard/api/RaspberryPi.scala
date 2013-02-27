@@ -3,13 +3,13 @@ package api
 
 import net.liftweb.http.rest.RestHelper
 import net.liftweb.http._
-import net.liftweb.common.{Full, Loggable, Box}
-import net.liftweb.util.Helpers._
+import net.liftweb.common._
 import net.liftweb.json._
 import net.liftweb.json.JsonDSL._
+
 import com.pi4j.io.gpio.GpioPinDigitalOutput
+
 import comet.GpioCometManager
-import com.fmpwizard.PinUp
 import com.fmpwizard.PinDown
 import com.fmpwizard.PinUp
 
@@ -49,10 +49,10 @@ trait PiHelper extends RestHelper with Loggable {
     import scala.collection.JavaConversions._
     import com.fmpwizard.gpio.Controller.gpio
 
-    val json = (gpio.getProvisionedPins.map(_.getName)).foldLeft(JObject(Nil))(
-      (jvalues , num) =>
-        JObject( List( JField( "pin-uri", ( PiAST.GPIO + "/%s" format num ) ) ) ) ~  jvalues
-    )
+    val json: JValue = "pins" -> gpio.getProvisionedPins.map(_.getName).map{ num =>
+      (("pin-uri" ->  ( PiAST.GPIO + "/%s" format num ) ))
+    }
+
     json
   }
 
