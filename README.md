@@ -29,6 +29,35 @@ then copy the generated jar file to your raspberry pi and start it:
     sudo java -jar /path/to/jar
 
 
+##Working with the REST API.
+
+The only part that may be tricky to get right is the PUT request to change pin statuses, please use:
+
+To set the pin1 to off, you can use:
+
+```
+curl \
+  -H "Content-Type: application/json" \
+  -XPUT http://fmpwizard.no-ip.org/api/raspberrypi/gpio/pin1 \
+  -d '{"status":false}'
+
+```
+And to get the current status of the pin, you can use:
+
+```
+curl \
+  -H "Content-Type: application/json" \
+  -XGET http://fmpwizard.no-ip.org/api/raspberrypi/gpio/pin1
+
+```
+
+and you would get:
+
+```
+{"status":"true","put-uri":"http://fmpwizard.no-ip.org/api/raspberrypi/gpio/pin1"}
+```
+
+
 Enjoy
 
   **Diego**
