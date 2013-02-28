@@ -1,23 +1,23 @@
 <html>
 <head><title>Home</title></head>
-<body class="lift:content_id=main">
-<div id="main" class="lift:surround?with=default;at=content">
-  <!-- the behavior of the div -->
-  <div data-lift="comet?type=ChatTriggerJsEvent">
-    Some chat messages
-    <ul id="messages">
-      <li class="clearable">A message</li>
-      <li class="clearable">Another message</li>
-      <li class="clearable">A third message</li>
-    </ul>
-  </div>
-  <div>
-    <form data-lift="form.ajax">
-      <input data-lift="ChatIn" id="chat_in">
-      <input type="submit" value="Say Something">
-    </form>
-  </div>
-</div>
-</body>
+  <body class="lift:content_id=main">
+    <div id="main" class="lift:surround?with=default;at=content">
+      <!-- the behavior of the div -->
+      <div data-lift="comet?type=ChatTriggerJsEvent">
+        Some chat messages
+        <ul id="messages">
+          <li class="clearable">A message</li>
+          <li class="clearable">Another message</li>
+          <li class="clearable">A third message</li>
+        </ul>
+      </div>
+      <div>
+        <form data-lift="form.ajax?class=navbar-form pull-left span5">
+          <input type="text" class="span5" data-lift="ChatIn" id="chat_in">
+          <button type="submit" class="btn btn-primary">Say Something</button>
+        </form>
+      </div>
+    </div>
+  </body>
 </html>
 
