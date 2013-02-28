@@ -4,6 +4,8 @@ package comet
 import net.liftweb._
 import http._
 import js.{JE, JsCmd}
+import json._
+import json.JsonDSL._
 import util._
 import Helpers._
 
@@ -13,7 +15,7 @@ import Helpers._
  * by this component.  When the component changes on the server
  * the changes are automatically reflected in the browser.
  */
-class Chat extends CometActor with CometListener {
+class ChatKnockOutJs extends CometActor with CometListener {
   private var msgs: Vector[String] = Vector() // private state
 
   /**
@@ -32,7 +34,7 @@ class Chat extends CometActor with CometListener {
   override def lowPriority = {
     case v: Vector[String] =>
       msgs = v
-      partialUpdate(NewMessage(v.last))
+      partialUpdate(NewMessageKo(v.last))
   }
 
   /**
@@ -41,6 +43,8 @@ class Chat extends CometActor with CometListener {
   def render = ClearClearable
 }
 
-case class NewMessage(message: String) extends JsCmd {
-  override val toJsCmd = JE.JsRaw(""" $('#messages').append('<li>%s</li>')""".format( unquote( encJs( message ) ) )).toJsCmd
+case class NewMessageKo(message: String) extends JsCmd {
+  implicit val formats = DefaultFormats.lossless
+  val json: JValue = ("message" -> message)
+  override val toJsCmd = JE.JsRaw(""" $(document).trigger('new-ko-chat', %s)""".format( compact( render( json ) ) ) ).toJsCmd
 }

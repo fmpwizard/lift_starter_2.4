@@ -9,6 +9,9 @@ import http._
 import sitemap._
 import Loc._
 
+import net.liftmodules.JQueryModule
+
+
 
 /**
  * A class that's instantiated early and run.  It allows the application
@@ -21,7 +24,9 @@ class Boot {
 
     // Build SiteMap
     val entries = List(
-      Menu.i("Home") / "index", // the simple way to declare a menu
+      Menu.i("Regular Chat") / "index", // the simple way to declare a menu
+      Menu.i("Using Js Events") / "trigger-js-event", // the simple way to declare a menu
+      Menu.i("Using knockout.js") / "chat-knockoutjs", // the simple way to declare a menu
 
       // more complex because this menu allows anything in the
       // /static path to be visible
@@ -42,6 +47,13 @@ class Boot {
 
     // Force the request to be UTF-8
     LiftRules.early.append(_.setCharacterEncoding("UTF-8"))
+
+    // set DocType to HTML5
+    LiftRules.htmlProperties.default.set((r: Req) =>new Html5Properties(r.userAgent))
+
+    JQueryModule.InitParam.JQuery=JQueryModule.JQuery172
+
+    JQueryModule.init()
 
   }
 }

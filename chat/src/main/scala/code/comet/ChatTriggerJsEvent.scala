@@ -1,3 +1,5 @@
+
+
 package code
 package comet
 
@@ -13,7 +15,7 @@ import Helpers._
  * by this component.  When the component changes on the server
  * the changes are automatically reflected in the browser.
  */
-class Chat extends CometActor with CometListener {
+class ChatTriggerJsEvent extends CometActor with CometListener {
   private var msgs: Vector[String] = Vector() // private state
 
   /**
@@ -32,7 +34,7 @@ class Chat extends CometActor with CometListener {
   override def lowPriority = {
     case v: Vector[String] =>
       msgs = v
-      partialUpdate(NewMessage(v.last))
+      partialUpdate(NewMessageEvent(v.last))
   }
 
   /**
@@ -41,6 +43,6 @@ class Chat extends CometActor with CometListener {
   def render = ClearClearable
 }
 
-case class NewMessage(message: String) extends JsCmd {
-  override val toJsCmd = JE.JsRaw(""" $('#messages').append('<li>%s</li>')""".format( unquote( encJs( message ) ) )).toJsCmd
+case class NewMessageEvent(message: String) extends JsCmd {
+  override val toJsCmd = JE.JsRaw(""" $(document).trigger('new-chat-message', %s)""".format( encJs( message ) ) ).toJsCmd
 }
