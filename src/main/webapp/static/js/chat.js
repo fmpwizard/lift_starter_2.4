@@ -4,11 +4,6 @@
     $('.clearable').remove();
     var chatMessages = new ChatMessages();
 
-    //
-    $(document).on('new-chat-message', function(event, data) {
-      $('#messages').append('<li>' + data + '</li>')
-    });
-
     $(document).on('new-ko-chat', function(event, data) {
       chatMessages.addMessage(data)
     });
