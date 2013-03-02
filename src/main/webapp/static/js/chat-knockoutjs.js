@@ -11,9 +11,11 @@
 
   ChatMessages = function() {
       var self = this;
-
+      //This holds all our messages
       var messages = ko.observableArray();
       self.addMessage = function(newMessage) {
+        //Here we add the new message to our array.
+        //ko will automatically update our html as we add more items to this array.
         messages.push(newMessage);
       }
 
