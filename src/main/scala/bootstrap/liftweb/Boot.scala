@@ -15,8 +15,6 @@ import net.liftmodules.FoBo
  */
 class Boot {
   def boot {
-    //Conexion(host = "ciriscr.com", baseDatos = "Africa")
-    //RegisterJodaTimeConversionHelpers()
 
     // where to search snippet
     LiftRules.addToPackages("com.fmpwizard")
