@@ -12,4 +12,5 @@ case class FutureIsHere(str: String, idSelector: String ) extends JsCmd {
   val updateCssClass = JE.JsRaw("""$("#%s").attr("class", "alert alert-success")""" format idSelector).cmd
 
   override val toJsCmd = CmdPair(replace, updateCssClass).toJsCmd
+  //override val toJsCmd = retry).toJsCmd
 }
