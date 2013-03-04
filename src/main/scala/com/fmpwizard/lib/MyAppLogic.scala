@@ -11,7 +11,7 @@ object MyAppLogic extends Loggable {
    */
   def querySlowService1(la: LAFuture[String]) {
     logger.info("querySlowService1 was called")
-    Thread.sleep(3000L)
+    Thread.sleep(9000L)
     la.satisfy(Thread.currentThread().getName)
   }
 
@@ -20,8 +20,7 @@ object MyAppLogic extends Loggable {
    * It will take the result from the LAFuture and put it on the page
    */
   def giveMeFuture1(la: LAFuture[String], id: String ): JsCmd = {
-    val ret= la.get(4000L)
-    FutureIsHere( ret.openOr("Failed to get the future."), id )
+    FutureIsHere( la, id )
   }
 
 
@@ -39,8 +38,7 @@ object MyAppLogic extends Loggable {
    * It will take the result from the LAFuture and put it on the page
    */
   def giveMeFuture2(la: LAFuture[String], id: String ): JsCmd = {
-    val ret= la.get(4000L)
-    FutureIsHere( ret.openOr("Failed to get the future."), id )
+    FutureIsHere( la, id )
   }
 
 }
