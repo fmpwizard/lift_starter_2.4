@@ -12,24 +12,15 @@ object FutureHelper extends Loggable{
   def laFuture2Lazy( func: => JsCmd ) : NodeSeq =
     Script(OnLoad( SHtml.ajaxInvoke( () => func ).exp.cmd ))
 
-  private def threadName(la: LAFuture[String]): Box[String] = {
-    Thread.sleep(3000L)
-    la.satisfy(Thread.currentThread().getName)
-    la.get(4000L)
-  }
-
-  private def todaysDay(la: LAFuture[String]): Box[String] = {
-    Thread.sleep(3000L)
-    la.satisfy((new DateTime).toString)
-    la.get(4000L)
-  }
 
   /**
    * Imagine this is a call to a 3rd party service that takes a long time.
    */
   def giveMeFuture1(la: LAFuture[String], id: String ): JsCmd = {
     logger.info("giveMeFuture1 was called")
-    val ret= threadName(la)
+    Thread.sleep(3000L)
+    la.satisfy(Thread.currentThread().getName)
+    val ret= la.get(4000L)
     FutureIsHere( ret.openOr("Failed to get the future."), id )
   }
 
@@ -38,7 +29,9 @@ object FutureHelper extends Loggable{
    */
   def giveMeFuture2(la: LAFuture[String], id: String ): JsCmd = {
     logger.info("giveMeFuture2 was called")
-    val ret= todaysDay(la)
+    Thread.sleep(3000L)
+    la.satisfy((new DateTime).toString)
+    val ret= la.get(4000L)
     FutureIsHere( ret.openOr("Failed to get the future."), id )
   }
 }
