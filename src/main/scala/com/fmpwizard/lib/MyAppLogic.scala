@@ -3,7 +3,6 @@ package com.fmpwizard.lib
 import net.liftweb.common.Loggable
 import net.liftweb.actor.LAFuture
 import net.liftweb.http.js.JsCmd
-import org.joda.time.DateTime
 
 object MyAppLogic extends Loggable {
 
@@ -32,7 +31,7 @@ object MyAppLogic extends Loggable {
   def querySlowService2(la: LAFuture[String]) {
     logger.info("querySlowService2 was called")
     Thread.sleep(3000L)
-    la.satisfy((new DateTime).toString)
+    la.satisfy(Thread.currentThread().getName)
   }
 
   /**

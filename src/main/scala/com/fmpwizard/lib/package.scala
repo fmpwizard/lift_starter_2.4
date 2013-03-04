@@ -4,6 +4,7 @@ import net.liftweb.http.js.JsCmds.CmdPair
 import net.liftweb.http.js.{JE, JsCmd}
 
 case class FutureIsHere(str: String, idSelector: String ) extends JsCmd {
+
   val replace = JE.JsRaw("""$("#%1$s").replaceWith('<span id="%1$s">Data: %2$s"</span>')"""
     .format(idSelector, str)
   ).cmd
