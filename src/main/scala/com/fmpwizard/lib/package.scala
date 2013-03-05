@@ -1,7 +1,7 @@
 package com.fmpwizard.lib
 
 import net.liftweb.http.js.JsCmds.CmdPair
-import net.liftweb.http.js.{JsCmds, JE, JsCmd}
+import net.liftweb.http.js.{ JE, JsCmd}
 import net.liftweb.common.Loggable
 import net.liftweb.http.S
 import net.liftweb.actor.LAFuture

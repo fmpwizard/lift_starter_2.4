@@ -22,6 +22,4 @@ object FutureHelper extends Loggable{
     LAScheduler.execute( () => initLAF( la ) )
     Script(OnLoad( SHtml.ajaxInvoke( () => resultFunc(la, idSelector) ).exp.cmd ))
   }
-
-
 }
