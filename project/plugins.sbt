@@ -13,4 +13,5 @@ libraryDependencies <+= sbtVersion(v => v match {
 //Idea plugin
 resolvers += "sbt-idea-repo" at "http://mpeltonen.github.com/maven/"
 
-addSbtPlugin("com.github.mpeltonen" % "sbt-idea" % "1.1.0-SNAPSHOT")
+addSbtPlugin("com.github.mpeltonen" % "sbt-idea" % "1.2.0")
+
