@@ -5,11 +5,13 @@ import net.liftweb.util.Helpers._
 import net.liftweb.actor.LAFuture
 import net.liftweb.common.Loggable
 import xml.NodeSeq
+import net.liftweb.http.js.JsCmd
+import lib.FutureIsHere
 
 class Sample extends Loggable {
 
-  val f1: LAFuture[String] = new LAFuture()
-  val f2: LAFuture[String] = new LAFuture()
+  val f1: LAFuture[JsCmd] = new LAFuture()
+  val f2: LAFuture[JsCmd] = new LAFuture()
 
   def render = {
     "#future1 *"        #> "Loading Future 1" &
@@ -24,8 +26,8 @@ class Sample extends Loggable {
     import lib.MyAppLogic._
 
     def apply(in: NodeSeq): NodeSeq = {
-      laFuture2Lazy(f1,  querySlowService1, giveMeFuture1, "future1" ) ++
-      laFuture2Lazy(f2,  querySlowService2, giveMeFuture2, "future2" )
+      laFuture2Lazy(f1,  querySlowService1, "future1" ) ++
+      laFuture2Lazy(f2,  querySlowService2, "future2" )
     }
   }
 }

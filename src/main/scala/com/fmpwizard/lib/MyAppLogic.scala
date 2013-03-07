@@ -2,43 +2,35 @@ package com.fmpwizard.lib
 
 import net.liftweb.common.Loggable
 import net.liftweb.actor.LAFuture
-import net.liftweb.http.js.JsCmd
+import net.liftweb.http.js.{JE, JsCmd}
+import net.liftweb.http.js.JsCmds.SetHtml
+import xml.Text
 
 object MyAppLogic extends Loggable {
 
   /**
    * On page render, call services to fulfill the LAFuture
    */
-  def querySlowService1(la: LAFuture[String]) {
+  def querySlowService1(la: LAFuture[JsCmd], id: String) {
     logger.info("querySlowService1 was called")
     Thread.sleep(9000L)
-    la.satisfy(Thread.currentThread().getName)
-  }
-
-  /**
-   * This gets called from browser by an ajax call.
-   * It will take the result from the LAFuture and put it on the page
-   */
-  def giveMeFuture1(la: LAFuture[String], id: String ): JsCmd = {
-    FutureIsHere( la, id )
+    val js = SetHtml(id, Text(Thread.currentThread().getName)) & AddCss(id)
+    la.satisfy(js)
   }
 
 
   /**
    * On page render, call services to fulfill the LAFuture
    */
-  def querySlowService2(la: LAFuture[String]) {
+  def querySlowService2(la: LAFuture[JsCmd], id: String) {
     logger.info("querySlowService2 was called")
     Thread.sleep(3000L)
-    la.satisfy(Thread.currentThread().getName)
+    val js = SetHtml(id, Text(Thread.currentThread().getName)) & AddCss(id)
+    la.satisfy(js)
   }
 
-  /**
-   * This gets called from browser by an ajax call.
-   * It will take the result from the LAFuture and put it on the page
-   */
-  def giveMeFuture2(la: LAFuture[String], id: String ): JsCmd = {
-    FutureIsHere( la, id )
-  }
+}
 
+case class AddCss(id: String) extends JsCmd {
+  override val toJsCmd = JE.JsRaw("""$("#%s").attr("class", "alert alert-success")""" format id).cmd.toJsCmd
 }
