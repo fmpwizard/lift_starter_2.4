@@ -4,33 +4,29 @@ import net.liftweb.common.Loggable
 import net.liftweb.actor.LAFuture
 import net.liftweb.http.js.{JE, JsCmd}
 import net.liftweb.http.js.JsCmds.SetHtml
-import xml.Text
+import xml.{NodeSeq, Text}
 
 object MyAppLogic extends Loggable {
 
   /**
    * On page render, call services to fulfill the LAFuture
    */
-  def querySlowService1(la: LAFuture[JsCmd], id: String) {
+  def querySlowService1(la: LAFuture[NodeSeq]) {
     logger.info("querySlowService1 was called")
     Thread.sleep(9000L)
-    val js = SetHtml(id, Text(Thread.currentThread().getName)) & AddCss(id)
-    la.satisfy(js)
+    val ns = <span class="alert alert-success">{Thread.currentThread().getName}</span>
+    la.satisfy(ns)
   }
 
 
   /**
    * On page render, call services to fulfill the LAFuture
    */
-  def querySlowService2(la: LAFuture[JsCmd], id: String) {
+  def querySlowService2(la: LAFuture[NodeSeq]) {
     logger.info("querySlowService2 was called")
     Thread.sleep(3000L)
-    val js = SetHtml(id, Text(Thread.currentThread().getName)) & AddCss(id)
-    la.satisfy(js)
+    val ns = <span class="alert alert-success">{Thread.currentThread().getName}</span>
+    la.satisfy(ns)
   }
 
-}
-
-case class AddCss(id: String) extends JsCmd {
-  override val toJsCmd = JE.JsRaw("""$("#%s").attr("class", "alert alert-success")""" format id).cmd.toJsCmd
 }
