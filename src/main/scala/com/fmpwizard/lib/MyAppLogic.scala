@@ -2,9 +2,8 @@ package com.fmpwizard.lib
 
 import net.liftweb.common.Loggable
 import net.liftweb.actor.LAFuture
-import net.liftweb.http.js.{JE, JsCmd}
-import net.liftweb.http.js.JsCmds.SetHtml
-import xml.{NodeSeq, Text}
+
+import xml.NodeSeq
 
 object MyAppLogic extends Loggable {
 

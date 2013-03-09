@@ -17,8 +17,9 @@ class Sample extends Loggable {
   LAScheduler.execute( () => querySlowService2( f2 ) )
 
   def render = {
-    "#future1"          #> f1 &
-    "#future2"          #> f2 &
-    "#render-thread *"  #> Thread.currentThread().getName
+    "#future1"                  #> f1 &
+    ".diego"                    #> f2 &
+    "data-name=another-future"  #> f2 &
+    "#render-thread *"          #> Thread.currentThread().getName
   }
 }
