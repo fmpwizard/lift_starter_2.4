@@ -24,14 +24,8 @@ class Boot {
 
     // Build SiteMap
     val entries = List(
-      Menu.i("Regular Chat") / "index", // the simple way to declare a menu
-      Menu.i("Using Js Events") / "trigger-js-event", // the simple way to declare a menu
-      Menu.i("Using knockout.js") / "chat-knockoutjs", // the simple way to declare a menu
-
-      // more complex because this menu allows anything in the
-      // /static path to be visible
-      Menu(Loc("Static", Link(List("static"), true, "/static/index"), 
-	       "Static Content")))
+      Menu.i("Chat") / "index"
+    )
 
     // set the sitemap.  Note if you don't want access control for
     // each page, just comment this line out.

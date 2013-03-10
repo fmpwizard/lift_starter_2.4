@@ -4,6 +4,7 @@ package comet
 import net.liftweb._
 import http._
 import actor._
+import org.joda.time.DateTime
 
 /**
  * A singleton that provides chat features to all clients.
@@ -11,7 +12,7 @@ import actor._
  * message will be processed at once.
  */
 object ChatServer extends LiftActor with ListenerManager {
-  private var msgs = Vector("Welcome") // private state
+  private var msgs: Vector[ChatMessage] = Vector(ChatMessage("1", "Robot", "Welcome", new DateTime())) // private state
 
   /**
    * When we update the listeners, what message do we send?
@@ -28,10 +29,11 @@ object ChatServer extends LiftActor with ListenerManager {
    * messages, and then update all the listeners.
    */
   override def lowPriority = {
-    case s: String =>
-      msgs :+= s
+    case m: ChatMessage =>
+      msgs :+= m
       updateListeners()
 
   }
 }
 
+case class ChatMessage(id: String, username: String, message: String, datetime: DateTime)

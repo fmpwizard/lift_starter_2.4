@@ -20,7 +20,7 @@
       }
 
       try {
-        ko.applyBindings({ messages: messages }, document.getElementById('chat-messages')[0]);
+        ko.applyBindings({ messages: messages }, document.getElementById('messages')[0]);
       } catch(e) {
         //ignore
       }

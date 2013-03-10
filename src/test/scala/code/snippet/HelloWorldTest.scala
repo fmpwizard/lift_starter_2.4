@@ -31,7 +31,7 @@ object HelloWorldTestSpecs extends Specification {
 
   "HelloWorld Snippet" should {
     "Put the time in the node" in {
-      val hello = new HelloWorld
+      val hello = new Login
       Thread.sleep(1000) // make sure the time changes
 
       val str = hello.howdy(<span>Welcome to your Lift app at <span id="time">Time goes here</span></span>).toString

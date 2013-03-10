@@ -1,13 +1,11 @@
 package code
 package comet
 
-import net.liftweb._
-import http._
-import js.{JE, JsCmd}
-import json._
-import json.JsonDSL._
-import util._
-import Helpers._
+import net.liftweb.http.{CometListener, CometActor}
+import net.liftweb.util.ClearClearable
+import net.liftweb.http.js.{JE, JsCmd}
+import net.liftweb.json._
+import net.liftweb.json.ext.JodaTimeSerializers
 
 
 /**
@@ -16,7 +14,7 @@ import Helpers._
  * the changes are automatically reflected in the browser.
  */
 class ChatKnockOutJs extends CometActor with CometListener {
-  private var msgs: Vector[String] = Vector() // private state
+  private var msgs: Vector[ChatMessage] = Vector() // private state
 
   /**
    * When the component is instantiated, register as
@@ -32,7 +30,7 @@ class ChatKnockOutJs extends CometActor with CometListener {
    * cause changes to be sent to the browser.
    */
   override def lowPriority = {
-    case v: Vector[String] =>
+    case v: Vector[ChatMessage] =>
       msgs = v
       partialUpdate(NewMessageKo(v.last))
   }
@@ -43,8 +41,9 @@ class ChatKnockOutJs extends CometActor with CometListener {
   def render = ClearClearable
 }
 
-case class NewMessageKo(message: String) extends JsCmd {
-  implicit val formats = DefaultFormats.lossless
-  val json: JValue = ("message" -> message)
+case class NewMessageKo(message: ChatMessage) extends JsCmd {
+
+  implicit val formats = DefaultFormats ++ JodaTimeSerializers.all
+  val json = Extraction.decompose(message)
   override val toJsCmd = JE.JsRaw(""" $(document).trigger('new-ko-chat', %s)""".format( compact( render( json ) ) ) ).toJsCmd
 }

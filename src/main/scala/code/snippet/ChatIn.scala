@@ -1,13 +1,15 @@
 package code
 package snippet
 
-import net.liftweb._
-import http._
-import js._
-import JsCmds._
-import JE._
+import net.liftweb.util.Helpers._
+import net.liftweb.http.SHtml
 
-import comet.ChatServer
+import comet.{ChatMessage, ChatServer}
+import net.liftweb.http.js.JsCmds.SetValById
+import org.joda.time.DateTime
+import net.liftweb.http.js.{JsExp, JsCmd, JE}
+import net.liftweb.json.JsonAST.JValue
+import net.liftweb.json.DefaultFormats
 
 /**
  * A snippet transforms input to output... it transforms
@@ -29,8 +31,21 @@ object ChatIn {
    * to the ChatServer and then returns JavaScript which
    * clears the input.
    */
-  def render = SHtml.onSubmit(s => {
-    ChatServer ! s
+  def render = {
+    "* [onclick]" #> SHtml.jsonCall(GetDataFromPage, submitMessage _)
+  }
+
+  private def submitMessage(j: JValue): JsCmd = {
+    implicit val format = DefaultFormats
+    val msg = j.extractOpt[String]
+    msg.foreach(m =>  ChatServer ! ChatMessage(randomString(6), CurrentUser.is, m, new DateTime()) )
     SetValById("chat_in", "")
-  })
+  }
+
+
+}
+
+
+case object GetDataFromPage extends JsExp {
+  override def toJsCmd = JE.JsRaw("""$("#chat_in").val()""").toJsCmd
 }
