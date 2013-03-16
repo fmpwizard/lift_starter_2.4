@@ -1,0 +1,4 @@
+ldap.url=ldap://127.0.0.1:10389
+ldap.base = dc=example,dc=com
+ldap.userName = uid=admin;ou=system
+ldap.password = secret

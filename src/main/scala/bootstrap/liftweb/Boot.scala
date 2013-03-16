@@ -1,12 +1,13 @@
 package bootstrap.liftweb
 
-import net.liftweb._
-import util._
-
-import common._
-import http._
-import sitemap._
 import net.liftmodules.FoBo
+
+import net.liftweb.http._
+import net.liftweb.sitemap._
+import net.liftweb.common._
+import net.liftweb.util.NamedPF
+import com.fmpwizard.utils._
+import com.fmpwizard.model.LDAPUser
 
 
 /**
@@ -19,13 +20,28 @@ class Boot {
     // where to search snippet
     LiftRules.addToPackages("com.fmpwizard")
 
-    // Build SiteMap
-    val entries = List(
-      Menu.i("Index") / "index"
-    )
+    try {
+      LDAPUser.ldapVendor.configure()
+    }
+    catch {
+      case e: Exception => e.printStackTrace()
+    }
 
-    // set the sitemap.  Note if you don't want access control for
-    // each page, just comment this line out.
+
+    LiftRules.dispatch.prepend(NamedPF("Login Validation") {
+      case Req("group_required" :: page, extension, _) if !LoginUtil.hasAuthority_?("sample_group") =>
+        LoginUtil.redirectIfLogged("/login/group_not_allowed")
+      case Req("login_required" :: page , extension, _) if (!LoginUtil.isLogged) =>
+        () => Full(RedirectResponse("/user_mgt/login"))
+    })
+
+    // Build SiteMap
+    val entries = Menu(Loc("Home", List("index"), "Home")) ::
+      Menu(Loc("Restricted Login", List("login_required"), "Login required")) ::
+      Menu(Loc("Restricted Group", List("group_required"), "Group required")) ::
+      Menu(Loc("Group not allowed", List("login", "group_not_allowed"), "Group not allowd", List(Loc.Hidden))) ::
+      LDAPUser.sitemap
+
     LiftRules.setSiteMap(SiteMap(entries:_*))
 
 
@@ -48,7 +64,13 @@ class Boot {
     FoBo.InitParam.ToolKit=FoBo.Bootstrap222
     FoBo.init()
 
+
+
+
+
   } //boot
 
 } //Boot
+
+
 
