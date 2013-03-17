@@ -9,6 +9,7 @@ import json._
 import json.JsonDSL._
 import util._
 import Helpers._
+import xml.NodeSeq
 
 
 /**
@@ -45,8 +46,12 @@ class ChatKnockOutJs extends CometActor with CometListener with Loggable {
    * Clear any elements that have the clearable class.
    */
   def render = {
-    this ! InitialRender
     ClearClearable
+  }
+
+  override def fixedRender = {
+    this ! InitialRender
+    NodeSeq.Empty
   }
 }
 
