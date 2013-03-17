@@ -2,6 +2,7 @@ package code
 package comet
 
 import net.liftweb._
+import common.Loggable
 import http._
 import js.{JE, JsCmd}
 import json._
@@ -15,7 +16,7 @@ import Helpers._
  * by this component.  When the component changes on the server
  * the changes are automatically reflected in the browser.
  */
-class ChatKnockOutJs extends CometActor with CometListener {
+class ChatKnockOutJs extends CometActor with CometListener with Loggable {
   private var msgs: Vector[String] = Vector() // private state
 
   /**
@@ -35,12 +36,18 @@ class ChatKnockOutJs extends CometActor with CometListener {
     case v: Vector[String] =>
       msgs = v
       partialUpdate(NewMessageKo(v.last))
+
+    case InitialRender =>
+      partialUpdate(InitialMessages( msgs ))
   }
 
   /**
    * Clear any elements that have the clearable class.
    */
-  def render = ClearClearable
+  def render = {
+    this ! InitialRender
+    ClearClearable
+  }
 }
 
 case class NewMessageKo(message: String) extends JsCmd {
@@ -48,3 +55,13 @@ case class NewMessageKo(message: String) extends JsCmd {
   val json: JValue = ("message" -> message)
   override val toJsCmd = JE.JsRaw(""" $(document).trigger('new-ko-chat', %s)""".format( compact( render( json ) ) ) ).toJsCmd
 }
+
+case class InitialMessages(messages: Vector[String]) extends JsCmd {
+  implicit val formats = DefaultFormats.lossless
+  val json: JValue = messages.map{ m =>
+    ("message" -> m)
+  }
+  override val toJsCmd = JE.JsRaw(""" $(document).trigger('initial-chat-messages', %s)""".format( compact( render( json ) ) ) ).toJsCmd
+}
+
+case object InitialRender
