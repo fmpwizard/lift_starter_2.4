@@ -2,13 +2,16 @@ package code
 package comet
 
 import net.liftweb._
-import common.Loggable
+import common._
 import http._
-import js.{JE, JsCmd}
+import http.js.{JsCmds, JE, JsCmd}
 import json._
 import json.JsonDSL._
 import util._
 import Helpers._
+import xml.NodeSeq
+import comet.NewMessageKo
+import comet.InitialMessages
 
 
 /**
@@ -17,6 +20,8 @@ import Helpers._
  * the changes are automatically reflected in the browser.
  */
 class ChatKnockOutJs extends CometActor with CometListener with Loggable {
+
+
   private var msgs: Vector[String] = Vector() // private state
 
   /**
@@ -45,9 +50,17 @@ class ChatKnockOutJs extends CometActor with CometListener with Loggable {
    * Clear any elements that have the clearable class.
    */
   def render = {
-    this ! InitialRender
     ClearClearable
   }
+
+  override def fixedRender: Box[NodeSeq] = {
+    S.session map { sess =>
+      sess.addPostPageJavaScript( () => JsCmds.Alert("hi") )
+    }
+    this ! InitialRender
+    NodeSeq.Empty
+  }
+
 }
 
 case class NewMessageKo(message: String) extends JsCmd {
