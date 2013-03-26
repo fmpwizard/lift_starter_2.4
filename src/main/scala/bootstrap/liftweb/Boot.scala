@@ -12,7 +12,6 @@ import Loc._
 import net.liftmodules.FoBo
 
 
-
 /**
  * A class that's instantiated early and run.  It allows the application
  * to modify lift's environment
@@ -23,15 +22,15 @@ class Boot {
     LiftRules.addToPackages("code")
 
     // Build SiteMap
-    val entries = List(
-      Menu.i("Regular Chat") / "index", // the simple way to declare a menu
-      Menu.i("Using Js Events") / "trigger-js-event", // the simple way to declare a menu
-      Menu.i("Using knockout.js") / "chat-knockoutjs", // the simple way to declare a menu
-
-      // more complex because this menu allows anything in the
-      // /static path to be visible
-      Menu(Loc("Static", Link(List("static"), true, "/static/index"), 
-	       "Static Content")))
+    val entries =
+      List(
+        Menu.i("Regular Chat") / "index",
+        Menu.i("Using Js Events") / "trigger-js-event",
+        Menu.i("Using knockout.js") / "chat-knockoutjs",
+        Menu.i("Using angular.js") / "chat-angularjs" ,
+        Menu(Loc("Static", Link(List("static"), true, "/static/index"),
+           "Static Content"))
+      )
 
     // set the sitemap.  Note if you don't want access control for
     // each page, just comment this line out.

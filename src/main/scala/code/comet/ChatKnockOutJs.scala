@@ -54,9 +54,6 @@ class ChatKnockOutJs extends CometActor with CometListener with Loggable {
   }
 
   override def fixedRender: Box[NodeSeq] = {
-    S.session map { sess =>
-      sess.addPostPageJavaScript( () => JsCmds.Alert("hi") )
-    }
     this ! InitialRender
     NodeSeq.Empty
   }

@@ -15,7 +15,6 @@
           $.each(messages, function(index, value){
             chatMessages.addMessage( value )
           });
-
         }
       });
   });
