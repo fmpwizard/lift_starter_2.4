@@ -14,7 +14,7 @@ import Helpers._
  * the changes are automatically reflected in the browser.
  */
 class Chat extends CometActor with CometListener {
-  private var msgs: Vector[String] = Vector() // private state
+  private var msgs: InboxMessages = InboxMessages(Vector()) // private state
 
   /**
    * When the component is instantiated, register as
@@ -30,8 +30,8 @@ class Chat extends CometActor with CometListener {
    * cause changes to be sent to the browser.
    */
   override def lowPriority = {
-    case v: Vector[String] =>
-      msgs = v
+    case data@ InboxMessages(v) =>
+      msgs = data
       partialUpdate(NewMessage(v.last))
   }
 

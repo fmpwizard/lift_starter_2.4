@@ -10,8 +10,7 @@ import net.liftweb.json.JsonDSL._
 
 class ChatAngularJs extends CometActor with CometListener with Loggable {
 
-
-  private var msgs: Vector[String] = Vector() // private state
+  private var msgs: InboxMessages = InboxMessages(Vector()) // private state
 
   /**
    * When the component is instantiated, register as
@@ -27,12 +26,14 @@ class ChatAngularJs extends CometActor with CometListener with Loggable {
    * cause changes to be sent to the browser.
    */
   override def lowPriority = {
-    case v: Vector[String] =>
-      sendListOrLastMessage( v )
-      msgs = v
+
+    case InboxMessages(v) =>
+      sendListOrLastMessage(v)
+      msgs = InboxMessages( v )
 
     case InitialRender =>
-      partialUpdate(InitialMessages( msgs ))
+      partialUpdate(InitialMessages( msgs.v ))
+
   }
 
   /**
@@ -48,7 +49,7 @@ class ChatAngularJs extends CometActor with CometListener with Loggable {
   }
 
   private[this] def sendListOrLastMessage(v: Vector[String]) = {
-    if ( ( v.length - msgs.length ) > 1 ) {
+    if ( ( v.length - msgs.v.length ) > 1 ) {
       this ! InitialRender
     } else {
       partialUpdate(NewMessageNg(v.last))

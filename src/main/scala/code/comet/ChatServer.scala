@@ -11,7 +11,7 @@ import actor._
  * message will be processed at once.
  */
 object ChatServer extends LiftActor with ListenerManager {
-  private var msgs = Vector("Welcome") // private state
+  private var msgs: InboxMessages = InboxMessages(Vector("Welcome")) // private state
 
   /**
    * When we update the listeners, what message do we send?
@@ -29,9 +29,9 @@ object ChatServer extends LiftActor with ListenerManager {
    */
   override def lowPriority = {
     case s: String =>
-      msgs :+= s
+      msgs = InboxMessages( msgs.v ++ Vector(s)  )
       updateListeners()
-
   }
 }
 
+case class InboxMessages(v: Vector[String])

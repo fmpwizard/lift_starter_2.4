@@ -22,7 +22,7 @@ import comet.InitialMessages
 class ChatKnockOutJs extends CometActor with CometListener with Loggable {
 
 
-  private var msgs: Vector[String] = Vector() // private state
+  private var msgs: InboxMessages = InboxMessages(Vector()) // private state
 
   /**
    * When the component is instantiated, register as
@@ -37,13 +37,14 @@ class ChatKnockOutJs extends CometActor with CometListener with Loggable {
    * and reRender() the component.  reRender() will
    * cause changes to be sent to the browser.
    */
+
   override def lowPriority = {
-    case v: Vector[String] =>
-      msgs = v
+    case InboxMessages(v) =>
+      msgs = InboxMessages( v )
       partialUpdate(NewMessageKo(v.last))
 
     case InitialRender =>
-      partialUpdate(InitialMessages( msgs ))
+      partialUpdate(InitialMessages( msgs.v ))
   }
 
   /**
