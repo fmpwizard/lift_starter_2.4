@@ -24,10 +24,7 @@ class Boot {
     // Build SiteMap
     val entries =
       List(
-        Menu.i("Regular Chat") / "index",
-        Menu.i("Using Js Events") / "trigger-js-event",
-        Menu.i("Using knockout.js") / "chat-knockoutjs",
-        Menu.i("Using angular.js") / "chat-angularjs" ,
+        Menu.i("Chat") / "index",
         Menu(Loc("Static", Link(List("static"), true, "/static/index"),
            "Static Content"))
       )
@@ -53,7 +50,6 @@ class Boot {
     //We skip the FoBo built in JQuery in favor for the FoBo included lift-jquery-module
     FoBo.InitParam.JQuery=FoBo.JQuery182
     FoBo.InitParam.ToolKit=FoBo.Bootstrap222
-    FoBo.InitParam.ToolKit=FoBo.Knockout221
     FoBo.init()
   }
 }

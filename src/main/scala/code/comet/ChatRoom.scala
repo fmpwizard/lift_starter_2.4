@@ -8,7 +8,7 @@ import js.{JE, JsCmd}
 import net.liftweb.json._
 import net.liftweb.json.JsonDSL._
 
-class ChatAngularJs extends CometActor with CometListener with Loggable {
+class ChatRoom extends CometActor with CometListener with Loggable {
 
   private var msgs: InboxMessages = InboxMessages(Vector()) // private state
 
