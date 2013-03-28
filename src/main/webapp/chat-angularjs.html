@@ -1,12 +1,12 @@
 <html>
 <head><title>Home</title></head>
 <body class="lift:content_id=main">
-<div ng-app id="main" class="lift:surround?with=default;at=content">
+<div data-ng-app id="main" class="lift:surround?with=default;at=content">
   <div ></div>
-  <div id="chat-messages" ng-controller="TodoCtrl" data-lift="comet?type=ChatAngularJs">
+  <div id="chat-messages" data-ng-controller="TodoCtrl" data-lift="comet?type=ChatAngularJs">
     Some chat messages
     <ul id="messages">
-      <li ng-repeat="todo in todos">
+      <li data-ng-repeat="todo in todos">
         <span data-ng-bind="todo.message">Sample message</span>
       </li>
       <li class="clearable">Another message</li>

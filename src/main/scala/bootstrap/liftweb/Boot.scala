@@ -53,6 +53,7 @@ class Boot {
     //We skip the FoBo built in JQuery in favor for the FoBo included lift-jquery-module
     FoBo.InitParam.JQuery=FoBo.JQuery182
     FoBo.InitParam.ToolKit=FoBo.Bootstrap222
+    FoBo.InitParam.ToolKit=FoBo.Knockout221
     FoBo.init()
   }
 }
