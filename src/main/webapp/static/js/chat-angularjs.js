@@ -4,17 +4,15 @@
     $('.clearable').remove();
     $(document)
       .on('new-chat-message', function(event, data) {
-        addNGMessages( data )
+        addNGMessages( data.data )
     })
       .on('initial-chat-messages', function(event, data){
-        //We do this to get the array as one var.
-        var messages =  Array.prototype.slice.call(arguments, 1);
         /**
          * If you open a new tab, Lift will send you all stored messages, so we
          * avoid duplicating them here
          */
         if ( areMessagesLoaded() == false ) {
-          $.each(messages, function(index, value){
+          $.each(data.data, function(index, value){
             addNGMessages( value )
           });
         }
@@ -28,9 +26,7 @@
   function addNGMessages( data ) {
     var scope = getScope();
     scope.$apply(function(){
-      console.log(data)
       scope.todos.push( data )
-      console.log(scope.todos)
     });
   }
   /*Do we have the initially loaded messages on this tab?*/

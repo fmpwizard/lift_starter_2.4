@@ -10,41 +10,50 @@ import net.liftweb.json.JsonDSL._
 import org.joda.time.DateTime
 import net.liftweb.json.ext.JodaTimeSerializers
 import code.snippet.CurrentUser
+import net.liftweb.actor.LAFuture
 
 
 class ChatRoom extends NamedCometActorTrait with Loggable {
 
-  logger.info("here we are")
-  type InboxMessages =  Vector[ChatMessage]
-
-  private var msgs: Option[InboxMessages] = None
-
   override def lowPriority = {
     case message: ChatMessage =>
+      partialUpdate( SingleChatMessage( message ) )
 
-      msgs = msgs.map { m =>
-        m ++ Vector(message )
-      }
-      partialUpdate(SingleChatMessage(message))
+    case InitialRender =>
+      logger.info("Initial render")
+      val futureStoredMessages = Storage !< GetAll
+      sendStoredMessages( futureStoredMessages )
 
-    case x => logger.info("got x " + x)
+
+    case x => logger.info("got: %s as a message " format x)
 
   }
 
-  /**
-   * Clear any elements that have the clearable class.
-   */
   def render = {
-    "#message-bind [data-ng-bind]"        #> "todo.data.message" &
-    "#timestamp [data-ng-bind]"           #> "todo.data.createdAt" &
+    "#message-bind  [data-ng-bind]"       #> "todo.message" &
+    "#timestamp     [data-ng-bind]"       #> "todo.createdAt" &
+    "#username      [data-ng-bind]"       #> "todo.username" &
+    "#message-id    [data-ng-bind]"       #> "todo.id" &
     "#messages-repeater [data-ng-repeat]" #> "todo in todos" &
-    "#username  [data-ng-bind]"           #> "todo.data.username" &
     ClearClearable
   }
 
   override def fixedRender: Box[NodeSeq] = {
     this ! InitialRender
+    logger.info("Calling Initial render")
     NodeSeq.Empty
+  }
+
+  private[this] def sendStoredMessages(futureStoredMessages: LAFuture[Any]) {
+    futureStoredMessages.foreach { storedMessages =>
+      for {
+        maybeMessages  <- Box.asA[Option[InboxMessages]](storedMessages)
+        messages       <- maybeMessages
+      } yield {
+        logger.info("made it %s" format messages)
+        partialUpdate( StoredChatMessage( messages ) )
+      }
+    }
   }
 
 
@@ -60,7 +69,7 @@ case class ChatMessage(id: String, username: String, message: String, createdAt:
   }
 }
 case class SingleChatMessage(data: ChatMessage) extends ChatRoomEvent("new-chat-message")
-case class StoredChatMessage(data: List[ChatMessage]) extends ChatRoomEvent("initial-chat-messages")
+case class StoredChatMessage(data: InboxMessages) extends ChatRoomEvent("initial-chat-messages")
 
 class ChatRoomEvent(event: String) extends JsCmd {
   implicit val formats = DefaultFormats ++ JodaTimeSerializers.all

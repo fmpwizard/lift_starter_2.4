@@ -4,7 +4,7 @@ package snippet
 import net.liftweb.util.Helpers.randomString
 import net.liftweb.http.{S, NamedCometListener, SHtml}
 import net.liftweb.http.js.JsCmds.SetValById
-import comet.ChatMessage
+import comet.{AddMessage, Storage, ChatMessage}
 import org.joda.time.DateTime
 import net.liftweb.common.{Full, Loggable}
 import net.liftweb.http.js.JsCmd
@@ -40,6 +40,7 @@ object ChatIn extends Loggable {
 
   def sendMessage(s: String): JsCmd =  {
     val message = ChatMessage( randomString(8), CurrentUser.is, s, new DateTime()  )
+    Storage ! AddMessage( message )
     NamedCometListener.getDispatchersFor( room ).foreach(_.foreach(actor => actor ! message ))
     SetValById("chat_in", "")
   }

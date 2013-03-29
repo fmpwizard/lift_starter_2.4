@@ -3,7 +3,7 @@ package snippet
 
 import net.liftweb.util.Helpers._
 import net.liftweb.http.{SHtml, SessionVar}
-import net.liftweb.http.js.{JE, JsCmd}
+import net.liftweb.http.js.{JsCmds, JE, JsCmd}
 
 object Login {
 
@@ -13,7 +13,6 @@ object Login {
         CurrentUser(s)
         DisableInput
       })
-
   }
 
 }

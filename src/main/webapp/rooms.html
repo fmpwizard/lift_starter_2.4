@@ -9,10 +9,11 @@
       <button type="submit" class="btn btn-success">Login</button>
     </form>
   </div>
-  <div id="chat-messages" data-ng-controller="TodoCtrl" data-lift="ChatRoomSnip">
+  <div id="chat-messages" data-ng-controller="TodoCtrl" data-lift="ChatRoomSnip" data-ng-cloak>
     <h2>Some chat messages</h2>
     <div id="messages" class="row-fluid">
       <div class="row-fluid" id="messages-repeater">
+        <div class="hidden" id="message-id">.sss..</div>
         <div class="span1" id="username">...</div>
         <div class="span7" id="message-bind">...</div>
         <div class="span2" id="timestamp">...</div>
