@@ -10,6 +10,7 @@ import sitemap._
 import Loc._
 
 import net.liftmodules.FoBo
+import code.snippet.ChatIn
 
 
 /**
@@ -22,12 +23,16 @@ class Boot {
     LiftRules.addToPackages("code")
 
     // Build SiteMap
+
     val entries =
       List(
-        Menu.i("Chat") / "index",
+        Menu.i("index") / "index" >> EarlyResponse(() => Full(RedirectResponse("/rooms/public"))),
+        ChatIn.roomMenu,
         Menu(Loc("Static", Link(List("static"), true, "/static/index"),
            "Static Content"))
       )
+
+
 
     // set the sitemap.  Note if you don't want access control for
     // each page, just comment this line out.

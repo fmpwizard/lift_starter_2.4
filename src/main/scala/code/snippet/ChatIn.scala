@@ -6,8 +6,9 @@ import net.liftweb.http.{S, NamedCometListener, SHtml}
 import net.liftweb.http.js.JsCmds.SetValById
 import comet.ChatMessage
 import org.joda.time.DateTime
-import net.liftweb.common.Loggable
+import net.liftweb.common.{Full, Loggable}
 import net.liftweb.http.js.JsCmd
+import net.liftweb.sitemap.Menu
 
 
 /**
@@ -20,7 +21,7 @@ import net.liftweb.http.js.JsCmd
  * objects, singletons.  Singletons are useful if there's
  * no explicit state managed in the snippet.
  */
-class ChatIn extends Loggable {
+object ChatIn extends Loggable {
 
   /**
    * The render method in this case returns a function
@@ -30,15 +31,16 @@ class ChatIn extends Loggable {
    * to the ChatServer and then returns JavaScript which
    * clears the input.
    */
-  val room = S.param("room").openOr("public")
+
+  lazy val roomMenu = Menu.param[String]("Room", "Room", s => Full(s), s => s) / "rooms"
+  def room = roomMenu.currentValue
+
   def render = SHtml.onSubmit( sendMessage _ )
 
 
   def sendMessage(s: String): JsCmd =  {
     val message = ChatMessage( randomString(8), CurrentUser.is, s, new DateTime()  )
-    logger.info("room: " + room)
-
-    NamedCometListener.getDispatchersFor( Some(room) ).foreach(_.foreach(actor => actor ! message ))
+    NamedCometListener.getDispatchersFor( room ).foreach(_.foreach(actor => actor ! message ))
     SetValById("chat_in", "")
   }
 }
