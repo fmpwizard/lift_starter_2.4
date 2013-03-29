@@ -3,7 +3,7 @@
     //Just like Lift removes elements with this class name
     $('.clearable').remove();
     $(document)
-      .on('new-ng-chat', function(event, data) {
+      .on('new-chat-message', function(event, data) {
         addNGMessages( data )
     })
       .on('initial-chat-messages', function(event, data){
@@ -25,10 +25,12 @@
     return angular.element( e ).scope();
   }
   /*function that add messages to our model*/
-  function addNGMessages( message ) {
+  function addNGMessages( data ) {
     var scope = getScope();
     scope.$apply(function(){
-      scope.todos.push( message )
+      console.log(data)
+      scope.todos.push( data )
+      console.log(scope.todos)
     });
   }
   /*Do we have the initially loaded messages on this tab?*/

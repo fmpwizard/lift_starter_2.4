@@ -1,13 +1,14 @@
 package code
 package snippet
 
-import net.liftweb._
-import http._
-import js._
-import JsCmds._
-import JE._
+import net.liftweb.util.Helpers.randomString
+import net.liftweb.http.{S, NamedCometListener, SHtml}
+import net.liftweb.http.js.JsCmds.SetValById
+import comet.ChatMessage
+import org.joda.time.DateTime
+import net.liftweb.common.Loggable
+import net.liftweb.http.js.JsCmd
 
-import comet.ChatServer
 
 /**
  * A snippet transforms input to output... it transforms
@@ -19,7 +20,7 @@ import comet.ChatServer
  * objects, singletons.  Singletons are useful if there's
  * no explicit state managed in the snippet.
  */
-object ChatIn {
+class ChatIn extends Loggable {
 
   /**
    * The render method in this case returns a function
@@ -29,8 +30,15 @@ object ChatIn {
    * to the ChatServer and then returns JavaScript which
    * clears the input.
    */
-  def render = SHtml.onSubmit(s => {
-    ChatServer ! s
+  val room = S.param("room").openOr("public")
+  def render = SHtml.onSubmit( sendMessage _ )
+
+
+  def sendMessage(s: String): JsCmd =  {
+    val message = ChatMessage( randomString(8), CurrentUser.is, s, new DateTime()  )
+    logger.info("room: " + room)
+
+    NamedCometListener.getDispatchersFor( Some(room) ).foreach(_.foreach(actor => actor ! message ))
     SetValById("chat_in", "")
-  })
+  }
 }

@@ -15,7 +15,8 @@
 
 
     <logger name="code" level="info" />
-    <root level="warn">
+    <logger name="net.liftweb.util.TimeHelpers" level="warn" />
+    <root level="info">
         <appender-ref ref="STDOUT" />
     </root>
 </configuration>

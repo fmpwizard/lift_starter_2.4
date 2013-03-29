@@ -7,32 +7,27 @@ import xml.NodeSeq
 import js.{JE, JsCmd}
 import net.liftweb.json._
 import net.liftweb.json.JsonDSL._
+import org.joda.time.DateTime
+import net.liftweb.json.ext.JodaTimeSerializers
+import code.snippet.CurrentUser
 
-class ChatRoom extends CometActor with CometListener with Loggable {
 
-  private var msgs: InboxMessages = InboxMessages(Vector()) // private state
+class ChatRoom extends NamedCometActorTrait with Loggable {
 
-  /**
-   * When the component is instantiated, register as
-   * a listener with the ChatServer
-   */
-  def registerWith = ChatServer
+  logger.info("here we are")
+  type InboxMessages =  Vector[ChatMessage]
 
-  /**
-   * The CometActor is an Actor, so it processes messages.
-   * In this case, we're listening for Vector[String],
-   * and when we get one, update our private state
-   * and reRender() the component.  reRender() will
-   * cause changes to be sent to the browser.
-   */
+  private var msgs: Option[InboxMessages] = None
+
   override def lowPriority = {
+    case message: ChatMessage =>
 
-    case InboxMessages(v) =>
-      sendListOrLastMessage(v)
-      msgs = InboxMessages( v )
+      msgs = msgs.map { m =>
+        m ++ Vector(message )
+      }
+      partialUpdate(SingleChatMessage(message))
 
-    case InitialRender =>
-      partialUpdate(InitialMessages( msgs.v ))
+    case x => logger.info("got x " + x)
 
   }
 
@@ -40,6 +35,10 @@ class ChatRoom extends CometActor with CometListener with Loggable {
    * Clear any elements that have the clearable class.
    */
   def render = {
+    "#message-bind [data-ng-bind]"        #> "todo.data.message" &
+    "#timestamp [data-ng-bind]"           #> "todo.data.createdAt" &
+    "#messages-repeater [data-ng-repeat]" #> "todo in todos" &
+    "#username  [data-ng-bind]"           #> "todo.data.username" &
     ClearClearable
   }
 
@@ -48,19 +47,29 @@ class ChatRoom extends CometActor with CometListener with Loggable {
     NodeSeq.Empty
   }
 
-  private[this] def sendListOrLastMessage(v: Vector[String]) = {
-    if ( ( v.length - msgs.v.length ) > 1 ) {
-      this ! InitialRender
-    } else {
-      partialUpdate(NewMessageNg(v.last))
-    }
+
+
+}
+
+
+case object InitialRender
+
+case class ChatMessage(id: String, username: String, message: String, createdAt: DateTime) {
+  def toJavaScript: String = {
+    """{id}"""
   }
+}
+case class SingleChatMessage(data: ChatMessage) extends ChatRoomEvent("new-chat-message")
+case class StoredChatMessage(data: List[ChatMessage]) extends ChatRoomEvent("initial-chat-messages")
 
+class ChatRoomEvent(event: String) extends JsCmd {
+  implicit val formats = DefaultFormats ++ JodaTimeSerializers.all
+  val json = Extraction.decompose(this)
+  override def toJsCmd = JE.JsRaw("""$(document).trigger('%s', %s)""".format(event,  compact( render( json ) ) ) ).cmd.toJsCmd
 }
 
-case class NewMessageNg(message: String) extends JsCmd {
-  implicit val formats = DefaultFormats.lossless
-  val json: JValue = ("message" -> message)
-  override val toJsCmd = JE.JsRaw(""" $(document).trigger('new-ng-chat', %s)""".format( compact( render( json ) ) ) ).toJsCmd
+trait JavaScriptObject[T] {
+  def toJavaScript(value: T): String
 }
+
 
