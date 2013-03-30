@@ -4,15 +4,26 @@ package snippet
 import net.liftweb.util.Helpers._
 import net.liftweb.http.{SHtml, SessionVar}
 import net.liftweb.http.js.{JsCmds, JE, JsCmd}
+import net.liftweb.util._
 
 object Login {
 
   def render = {
+
+    def disable: CssSel = {
+      if (CurrentUser.is != "Username") {
+        "* [disabled]" #> "disabled"
+      } else {
+        "nah" #> "noop"
+      }
+    }
+
     "* [placeholder]" #> CurrentUser.is &
       "*" #> SHtml.onSubmit(s => {
         CurrentUser(s)
         DisableInput
-      })
+      }) &
+      disable
   }
 
 }
