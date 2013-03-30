@@ -1,3 +1,8 @@
+import sbt._
+import sbt.Keys._
+import io.escalante.sbt.EscalantePlugin._
+import io.escalante.sbt.EscalantePlugin.EscalanteKeys._
+
 name := "Chat room"
 
 version := "0.2"
@@ -12,6 +17,8 @@ resolvers ++= Seq("snapshots"     at "http://oss.sonatype.org/content/repositori
 
 seq(com.github.siasia.WebPlugin.webSettings :_*)
 
+escalanteSettings
+
 scalacOptions ++= Seq("-deprecation", "-unchecked")
 
 libraryDependencies ++= {
@@ -25,4 +32,3 @@ libraryDependencies ++= {
     "ch.qos.logback"    % "logback-classic"     % "1.0.6"
   )
 }
-

@@ -9,7 +9,7 @@ import net.liftweb.json._
 import net.liftweb.json.JsonDSL._
 import org.joda.time.DateTime
 import net.liftweb.json.ext.JodaTimeSerializers
-import code.snippet.CurrentUser
+import code.snippet.{ChatIn, CurrentUser}
 import net.liftweb.actor.LAFuture
 
 
@@ -21,7 +21,8 @@ class ChatRoom extends NamedCometActorTrait with Loggable {
 
     case InitialRender =>
       logger.info("Initial render")
-      val futureStoredMessages = Storage !< GetAll
+      logger.info("Will request %s" format name.openOr("public") )
+      val futureStoredMessages = Storage !< GetAll( name.openOr("public") )
       sendStoredMessages( futureStoredMessages )
 
 
@@ -63,7 +64,7 @@ class ChatRoom extends NamedCometActorTrait with Loggable {
 
 case object InitialRender
 
-case class ChatMessage(id: String, username: String, message: String, createdAt: DateTime) {
+case class ChatMessage(id: String, username: String, message: String, createdAt: DateTime, roomName: String) {
   def toJavaScript: String = {
     """{id}"""
   }

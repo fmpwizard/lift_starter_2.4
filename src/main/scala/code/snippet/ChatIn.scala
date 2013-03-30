@@ -39,7 +39,7 @@ object ChatIn extends Loggable {
 
 
   def sendMessage(s: String): JsCmd =  {
-    val message = ChatMessage( randomString(8), CurrentUser.is, s, new DateTime()  )
+    val message = ChatMessage( randomString(8), CurrentUser.is, s, new DateTime(), room.openOr("public")  )
     Storage ! AddMessage( message )
     NamedCometListener.getDispatchersFor( room ).foreach(_.foreach(actor => actor ! message ))
     SetValById("chat_in", "")
