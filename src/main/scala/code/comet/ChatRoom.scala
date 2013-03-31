@@ -32,7 +32,8 @@ class ChatRoom extends NamedCometActorTrait with Loggable {
 
   def render = {
     "#message-bind  [data-ng-bind]"       #> "todo.message" &
-    "#timestamp     [data-ng-bind]"       #> "todo.createdAt" &
+    "#timestamp     [title]"              #> "{{todo.createdAt}}" &
+    /*"#timestamp     [data-ng-bind]"       #> "todo.createdAt" &*/
     "#username      [data-ng-bind]"       #> "todo.username" &
     "#message-id    [data-ng-bind]"       #> "todo.id" &
     "#messages-repeater [data-ng-repeat]" #> "todo in todos" &

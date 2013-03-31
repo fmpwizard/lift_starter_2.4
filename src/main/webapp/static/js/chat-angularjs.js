@@ -35,7 +35,29 @@
     return scope.todos.length > 0
   }
 })();
+
+
+var app = angular.module("Chat", []);
 /*The model*/
 function TodoCtrl( $scope ) {
   $scope.todos = [];
 }
+
+
+app.directive("timeAgo", function($compile) {
+  return {
+    restrict: "A",
+    link: function (scope, element, attr) {
+      scope.$watch('todo', function (val) {
+        element.find("abbr.time-ago").timeago();
+      });
+    }
+  };
+});
+
+app.filter("timeAgo", function() {
+  return function(date) {
+    return jQuery.timeago(date);
+  };
+});
+

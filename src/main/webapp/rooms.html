@@ -1,7 +1,7 @@
 <html>
 <head><title>Home</title></head>
 <body class="lift:content_id=main">
-<div data-ng-app id="main" class="lift:surround?with=default;at=content">
+<div data-ng-app="Chat" id="main" class="lift:surround?with=default;at=content">
 
   <div>
     <form data-lift="form.ajax?class=navbar-form pull-left span5">
@@ -12,11 +12,11 @@
   <div id="chat-messages" data-ng-controller="TodoCtrl" data-lift="ChatRoomSnip" data-ng-cloak>
     <h2>Some chat messages</h2>
     <div id="messages" class="row-fluid">
-      <div class="row-fluid" id="messages-repeater">
+      <div class="row-fluid" id="messages-repeater" time-ago='todo'>
         <div class="hidden" id="message-id">.sss..</div>
         <div class="span1" id="username">...</div>
         <div class="span7" id="message-bind">...</div>
-        <div class="span2" id="timestamp">...</div>
+        <abbr id="timestamp" class="time-ago span2" title="2013-03-31T16:54:17Z">2013-03-31T16:54:17Z</abbr>
       </div>
     </div>
   </div>
@@ -27,8 +27,12 @@
     </form>
   </div>
 
-  <tail><script src="/static/js/chat-angularjs.js" type="text/javascript"></script></tail>
-  <tail><script src="/static/js/angular.min.js"    type="text/javascript"></script></tail>
+  <tail>
+    <script src="/static/js/angular.min.js"    type="text/javascript"></script>
+    <script src="/static/js/chat-angularjs.js" type="text/javascript"></script>
+  </tail>
+
+
 </div>
 </body>
 </html>
