@@ -18,29 +18,39 @@
         }
       });
   });
-  function getScope() {
-    var e = document.getElementById( 'messages' );
-    return angular.element( e ).scope();
-  }
-  /*function that add messages to our model*/
-  function addNGMessages( data ) {
-    var scope = getScope();
-    scope.$apply(function(){
-      scope.todos.push( data )
-    });
-  }
-  /*Do we have the initially loaded messages on this tab?*/
-  function areMessagesLoaded() {
-    var scope = getScope();
-    return scope.todos.length > 0
-  }
+
 })();
 
 
+
 var app = angular.module("Chat", []);
+
+function getScope() {
+  var e = document.getElementById( 'messages' );
+  return angular.element( e ).scope();
+}
+/*function that add messages to our model*/
+function addNGMessages( data ) {
+  var scope = getScope();
+  scope.$apply(function(){
+    scope.todos.push( data )
+  });
+}
+/*Do we have the initially loaded messages on this tab?*/
+function areMessagesLoaded() {
+  var scope = getScope();
+  return scope.todos.length > 0
+}
+
+
 /*The model*/
 function TodoCtrl( $scope ) {
   $scope.todos = [];
+
+  $(document).on('current-user', function(event, data){
+    $scope.profile = {userId : data.userId};
+  })
+
 }
 
 
@@ -52,6 +62,16 @@ app.directive("timeAgo", function($compile) {
         element.find("abbr.time-ago").timeago();
       });
     }
+  };
+});
+
+app.directive('messageForMe', function() {
+  return function(scope, elem, attrs) {
+    scope.$watch(attrs.messageForMe, function(value) {
+      if(value.toLowerCase().indexOf( scope.profile.userId.toLowerCase() ) > -1  ) {
+        elem.addClass('message-to-me');
+     }
+    });
   };
 });
 

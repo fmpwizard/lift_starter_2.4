@@ -1,3 +1,8 @@
-.hidden {
-  display: none
+.message-to-me, .message-to-me h4 {
+    color: #C09853;
+}
+.message-to-me {
+    background-color: #FCF8E3;
+    border-radius: 4px 4px 4px 4px;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
 }

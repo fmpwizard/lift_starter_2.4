@@ -12,7 +12,7 @@
   <div id="chat-messages" data-ng-controller="TodoCtrl" data-lift="ChatRoomSnip" data-ng-cloak>
     <h2>Some chat messages</h2>
     <div id="messages" class="row-fluid">
-      <div class="row-fluid" id="messages-repeater" time-ago='todo'>
+      <div class="row-fluid" id="messages-repeater" data-time-ago='todo' data-message-for-me="todo.message" >
         <div class="hidden" id="message-id">.sss..</div>
         <div class="span1" id="username">...</div>
         <div class="span7" id="message-bind">...</div>
@@ -21,9 +21,9 @@
     </div>
   </div>
   <div>
-    <form data-lift="form.ajax?class=navbar-form pull-left span5">
-      <input type="text" class="span5"  id="chat_in" data-lift="ChatIn">
-      <button type="submit" class="btn btn-primary">Say Something</button>
+    <form data-lift="form.ajax?class=navbar-form pull-left span12">
+      <textarea type="area" class="span10"  id="chat_in" data-lift="ChatIn"></textarea>
+      <button type="submit" class="btn btn-primary">Send</button>
     </form>
   </div>
 

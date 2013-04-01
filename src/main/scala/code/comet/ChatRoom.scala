@@ -9,7 +9,7 @@ import net.liftweb.json._
 import net.liftweb.json.JsonDSL._
 import org.joda.time.DateTime
 import net.liftweb.json.ext.JodaTimeSerializers
-import code.snippet.{ChatIn, CurrentUser}
+import code.snippet.{UserLoggedIn, ChatIn, CurrentUser}
 import net.liftweb.actor.LAFuture
 
 
@@ -23,17 +23,15 @@ class ChatRoom extends NamedCometActorTrait with Loggable {
       logger.info("Initial render")
       logger.info("Will request %s" format name.openOr("public") )
       val futureStoredMessages = Storage !< GetAll( name.openOr("public") )
+      partialUpdate( UserLoggedIn(CurrentUser.is) )
       sendStoredMessages( futureStoredMessages )
 
-
     case x => logger.info("got: %s as a message " format x)
-
   }
 
   def render = {
     "#message-bind  [data-ng-bind]"       #> "todo.message" &
     "#timestamp     [title]"              #> "{{todo.createdAt}}" &
-    /*"#timestamp     [data-ng-bind]"       #> "todo.createdAt" &*/
     "#username      [data-ng-bind]"       #> "todo.username" &
     "#message-id    [data-ng-bind]"       #> "todo.id" &
     "#messages-repeater [data-ng-repeat]" #> "todo in todos" &
@@ -57,8 +55,6 @@ class ChatRoom extends NamedCometActorTrait with Loggable {
       }
     }
   }
-
-
 
 }
 
