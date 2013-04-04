@@ -1,14 +1,17 @@
 package code
 package snippet
 
-import net.liftweb.util.Helpers.randomString
-import net.liftweb.http.{S, NamedCometListener, SHtml}
+import comet._
+
+import net.liftweb.common._
+import net.liftweb.http._
+import net.liftweb.http.js._
 import net.liftweb.http.js.JsCmds.SetValById
-import comet.{AddMessage, Storage, ChatMessage}
-import org.joda.time.DateTime
-import net.liftweb.common.{Full, Loggable}
-import net.liftweb.http.js.JsCmd
+import net.liftweb.util.Helpers.randomString
 import net.liftweb.sitemap.Menu
+
+import org.joda.time.DateTime
+import net.liftweb.util.Helpers
 
 
 /**
@@ -42,6 +45,32 @@ object ChatIn extends Loggable {
     val message = ChatMessage( randomString(8), CurrentUser.is, s, new DateTime(), room.openOr("public")  )
     Storage ! AddMessage( message )
     NamedCometListener.getDispatchersFor( room ).foreach(_.foreach(actor => actor ! message ))
-    SetValById("chat_in", "")
+    SetValById("chat_in", "") &
+    addDynamicComet()
   }
+
+  def addDynamicComet(): JsCmd = {
+
+    val html = S.runTemplate("side-chat":: Nil)
+    println(html)
+
+    val cometId = html.map{ h =>
+      h \ "div" \ "@id"
+    }
+
+    html.map{h =>
+      h(0).attributes
+
+    }
+
+    println("id is " + cometId)
+
+
+
+    JE.JsRaw("""lift_toWatch['%s'] = '%s'""".format( cometId.getOrElse("default-id"), Helpers.nextNum ) ).cmd &
+      JE.JsRaw("""console.log(lift_toWatch)""").cmd
+
+
+  }
+
 }

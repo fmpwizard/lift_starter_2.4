@@ -20,16 +20,17 @@ class ChatRoom extends NamedCometActorTrait with Loggable {
       partialUpdate( SingleChatMessage( message ) )
 
     case InitialRender =>
-      logger.info("Initial render")
-      logger.info("Will request %s" format name.openOr("public") )
+      logger.debug("Initial render")
+      logger.debug("Will request %s" format name.openOr("public") )
       val futureStoredMessages = Storage !< GetAll( name.openOr("public") )
       partialUpdate( UserLoggedIn(CurrentUser.is) )
       sendStoredMessages( futureStoredMessages )
 
-    case x => logger.info("got: %s as a message " format x)
+    case x => logger.debug("got: %s as a message " format x)
   }
 
   def render = {
+    "h2 *+"                               #> name &
     "#message-bind  [data-ng-bind]"       #> "todo.message" &
     "#timestamp     [title]"              #> "{{todo.createdAt}}" &
     "#username      [data-ng-bind]"       #> "todo.username" &
@@ -38,9 +39,12 @@ class ChatRoom extends NamedCometActorTrait with Loggable {
     ClearClearable
   }
 
+
+
+
   override def fixedRender: Box[NodeSeq] = {
     this ! InitialRender
-    logger.info("Calling Initial render")
+    logger.debug("Calling Initial render")
     NodeSeq.Empty
   }
 
@@ -50,7 +54,7 @@ class ChatRoom extends NamedCometActorTrait with Loggable {
         maybeMessages  <- Box.asA[Option[InboxMessages]](storedMessages)
         messages       <- maybeMessages
       } yield {
-        logger.info("made it %s" format messages)
+        logger.debug("made it %s" format messages)
         partialUpdate( StoredChatMessage( messages ) )
       }
     }
