@@ -78,9 +78,3 @@ class ChatRoomEvent(event: String) extends JsCmd {
   val json = Extraction.decompose(this)
   override def toJsCmd = JE.JsRaw("""$(document).trigger('%s', %s)""".format(event,  compact( render( json ) ) ) ).cmd.toJsCmd
 }
-
-trait JavaScriptObject[T] {
-  def toJavaScript(value: T): String
-}
-
-

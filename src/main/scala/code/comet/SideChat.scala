@@ -1,34 +1,60 @@
 package code.comet
 
 import net.liftweb.http.CometActor
-import net.liftweb.util.{Schedule, PassThru}
-import net.liftweb.util.Helpers._
-import net.liftweb.http.js.{JE, JsCmds}
-import net.liftweb.builtin.snippet.AsyncRenderComet
+import code.snippet.{CurrentUser, UserLoggedIn}
+import net.liftweb.common._
+import scala.xml.NodeSeq
+import net.liftweb.actor.LAFuture
+import net.liftweb.util.ClearClearable
 
-class SideChat extends AsyncRenderComet {
 
+class SideChat extends CometActor with Loggable {
 
-  override def lowPriority: PartialFunction[Any, Unit] = {
+  override def lowPriority = {
+    case message: ChatMessage =>
+      partialUpdate( SideSingleChatMessage( message ) )
 
-    case Ping =>
-      println("here 3")
-      Schedule.schedule( this, Ping , 10 seconds  )
-      println("got it!")
-      partialUpdate( JE.JsRaw( """console.log("here.")""" ).cmd )
+    case InitialRender =>
+      logger.debug("Initial render")
+      logger.debug("Will request %s" format name.openOr("public") )
+      val futureStoredMessages = Storage !< GetAll( name.openOr("public") )
+      partialUpdate( UserLoggedIn(CurrentUser.is) )
+      sendStoredMessages( futureStoredMessages )
 
+    case x => logger.debug("got: %s as a message " format x)
   }
 
-  override def render = {
-    println("render called")
-    PassThru
+  def render = {
+    "h2 *+"                               #> name &
+      "#message-bind  [data-ng-bind]"       #> "todo.message" &
+      "#timestamp     [title]"              #> "{{todo.createdAt}}" &
+      "#username      [data-ng-bind]"       #> "todo.username" &
+      "#message-id    [data-ng-bind]"       #> "todo.id" &
+      "#messages-repeater [data-ng-repeat]" #> "todo in todos" &
+      ClearClearable
   }
 
-  override def localSetup()  {
-    Schedule.schedule( this, Ping , 3 seconds  )
-    println("local setup called")
-    super.localSetup()
+
+
+
+  override def fixedRender: Box[NodeSeq] = {
+    this ! InitialRender
+    logger.debug("Calling Initial render")
+    NodeSeq.Empty
+  }
+
+  private[this] def sendStoredMessages(futureStoredMessages: LAFuture[Any]) {
+    futureStoredMessages.foreach { storedMessages =>
+      for {
+        maybeMessages  <- Box.asA[Option[InboxMessages]](storedMessages)
+        messages       <- maybeMessages
+      } yield {
+        logger.debug("made it %s" format messages)
+        partialUpdate( SideStoredChatMessage( messages ) )
+      }
+    }
   }
 }
 
-case object Ping
+case class SideSingleChatMessage(data: ChatMessage) extends ChatRoomEvent("new-side-chat-message")
+case class SideStoredChatMessage(data: InboxMessages) extends ChatRoomEvent("initial-side-chat-messages")

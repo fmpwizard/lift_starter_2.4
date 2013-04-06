@@ -1,0 +1,21 @@
+<div data-lift="SideChatSnip">
+
+  <div id="side-chat-messages" data-ng-controller="SideChatCtrl" data-ng-cloak>
+    <h2>Room: </h2>
+    <div id="side-messages" class="row-fluid">
+      <div class="row-fluid" id="side-messages-repeater" data-time-ago='todo' data-message-for-me="todo.message" >
+        <div class="hidden" id="side-message-id">.sss..</div>
+        <div class="span1" id="side-username">...</div>
+        <div class="span7" id="side-message-bind">...</div>
+        <abbr id="side-timestamp" class="time-ago span2" title="2013-03-31T16:54:17Z">2013-03-31T16:54:17Z</abbr>
+      </div>
+    </div>
+  </div>
+  <div>
+    <form data-lift="form.ajax?class=navbar-form pull-left span12">
+      <textarea type="area" class="span10"  id="side-chat-in" data-lift="ChatIn.sideChat"></textarea>
+      <button type="submit" class="btn btn-primary">Send</button>
+    </form>
+  </div>
+
+</div>

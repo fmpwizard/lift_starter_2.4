@@ -5,7 +5,7 @@
     $(document)
       .on('new-chat-message', function(event, data) {
         addNGMessages( data.data )
-    })
+      })
       .on('initial-chat-messages', function(event, data){
         /**
          * If you open a new tab, Lift will send you all stored messages, so we
@@ -14,6 +14,20 @@
         if ( areMessagesLoaded() == false ) {
           $.each(data.data, function(index, value){
             addNGMessages( value )
+          });
+        }
+      })
+      .on('new-side-chat-message', function(event, data) {
+        addNGSideMessages( data.data )
+      })
+      .on('initial-side-chat-messages', function(event, data){
+        /**
+         * If you open a new tab, Lift will send you all stored messages, so we
+         * avoid duplicating them here
+         */
+        if ( areSideMessagesLoaded() == false ) {
+          $.each(data.data, function(index, value){
+            addNGSideMessages( value )
           });
         }
       });
@@ -42,7 +56,6 @@ function areMessagesLoaded() {
   return scope.todos.length > 0
 }
 
-
 /*The model*/
 function TodoCtrl( $scope ) {
   $scope.todos = [];
@@ -50,9 +63,35 @@ function TodoCtrl( $scope ) {
   $(document).on('current-user', function(event, data){
     $scope.profile = {userId : data.userId};
   })
-
 }
 
+
+/*============*/
+
+function getSideScope() {
+  var e = document.getElementById( 'side-messages' );
+  return angular.element( e ).scope();
+}
+/*function that add messages to our model*/
+function addNGSideMessages( data ) {
+  var scope = getSideScope();
+  scope.$apply(function(){
+    scope.todos.push( data )
+  });
+}
+/*Do we have the initially loaded messages on this tab?*/
+function areSideMessagesLoaded() {
+  var scope = getSideScope();
+  return scope.todos.length > 0
+}
+
+function SideChatCtrl( $scope ) {
+  $scope.todos = [];
+
+  $(document).on('current-user', function(event, data){
+    $scope.profile = {userId : data.userId};
+  })
+}
 
 app.directive("timeAgo", function($compile) {
   return {

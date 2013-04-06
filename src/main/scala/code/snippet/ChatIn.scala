@@ -14,63 +14,31 @@ import org.joda.time.DateTime
 import net.liftweb.util.Helpers
 
 
-/**
- * A snippet transforms input to output... it transforms
- * templates to dynamic content.  Lift's templates can invoke
- * snippets and the snippets are resolved in many different
- * ways including "by convention".  The snippet package
- * has named snippets and those snippets can be classes
- * that are instantiated when invoked or they can be
- * objects, singletons.  Singletons are useful if there's
- * no explicit state managed in the snippet.
- */
 object ChatIn extends Loggable {
 
-  /**
-   * The render method in this case returns a function
-   * that transforms NodeSeq => NodeSeq.  In this case,
-   * the function transforms a form input element by attaching
-   * behavior to the input.  The behavior is to send a message
-   * to the ChatServer and then returns JavaScript which
-   * clears the input.
-   */
 
   lazy val roomMenu = Menu.param[String]("Room", "Room", s => Full(s), s => s) / "rooms"
   def room = roomMenu.currentValue
+  def sideRoom = roomMenu.currentValue.map("side-" + _ )
 
   def render = SHtml.onSubmit( sendMessage _ )
+
+  def sideChat = SHtml.onSubmit( sendSideMessage _ )
 
 
   def sendMessage(s: String): JsCmd =  {
     val message = ChatMessage( randomString(8), CurrentUser.is, s, new DateTime(), room.openOr("public")  )
     Storage ! AddMessage( message )
     NamedCometListener.getDispatchersFor( room ).foreach(_.foreach(actor => actor ! message ))
-    SetValById("chat_in", "") &
-    addDynamicComet()
+    SetValById("chat_in", "")
   }
 
-  def addDynamicComet(): JsCmd = {
-
-    val html = S.runTemplate("side-chat":: Nil)
-    println(html)
-
-    val cometId = html.map{ h =>
-      h \ "div" \ "@id"
-    }
-
-    html.map{h =>
-      h(0).attributes
-
-    }
-
-    println("id is " + cometId)
-
-
-
-    JE.JsRaw("""lift_toWatch['%s'] = '%s'""".format( cometId.getOrElse("default-id"), Helpers.nextNum ) ).cmd &
-      JE.JsRaw("""console.log(lift_toWatch)""").cmd
-
-
+  def sendSideMessage(s: String): JsCmd =  {
+    val message = ChatMessage( randomString(8), CurrentUser.is, s, new DateTime(), sideRoom.openOr("side-public")  )
+    Storage ! AddMessage( message )
+    NamedCometListener.getDispatchersFor( sideRoom ).foreach(_.foreach(actor => actor ! message ))
+    SetValById("side-chat-in", "")
   }
+
 
 }
