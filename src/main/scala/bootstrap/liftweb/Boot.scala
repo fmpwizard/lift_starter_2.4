@@ -10,7 +10,6 @@ import sitemap._
 import Loc._
 
 import net.liftmodules.FoBo
-import code.snippet.ChatIn
 
 
 /**
@@ -26,10 +25,8 @@ class Boot {
 
     val entries =
       List(
-        Menu.i("index") / "index" >> EarlyResponse(() => Full(RedirectResponse("/rooms/public"))),
-        ChatIn.roomMenu,
-        Menu(Loc("Static", Link(List("static"), true, "/static/index"),
-           "Static Content"))
+        Menu.i("Dynamic comet") / "index",
+        Menu.i("Fixed Comet") / "static-comet"
       )
 
 
